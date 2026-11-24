@@ -673,7 +673,7 @@
             <div>
               <div class="panel-title">LIVE DOOMSDAY MARKING MATRIX</div>
               <p style="font-size: 0.82rem; color: var(--text-secondary);">
-                Click <strong>Grade / Remarks</strong> on any delegate to log multiple speeches (auto-averaged), edit direct section scores (supporting both positive merits and negative penalties), assign awards, or write feedback.
+                Click <strong>Grade / Remarks</strong> on any delegate to log multiple speeches (auto-averaged), edit direct section scores (supporting negative penalties like -10 directly), assign awards, or write feedback.
               </p>
             </div>
             <div style="min-width: 220px;">
@@ -739,7 +739,7 @@
             <div>
               <div class="panel-title">FLEXIBLE MARKING SCHEME BUILDER (SUM = X)</div>
               <p style="font-size: 0.82rem; color: var(--text-secondary);">
-                Add or modify grading sections anytime during the committee. Use <strong>Multi-Entry Average</strong> for Speeches/POIs or <strong>Direct Score</strong> for single criteria (supports negative bounds for penalties).
+                Add or modify grading sections anytime during the committee. Use <strong>Multi-Entry Average</strong> for Speeches/POIs or <strong>Direct Score</strong> for single criteria (fully supports negative entry values).
               </p>
             </div>
             <div class="status-pill">
@@ -750,7 +750,7 @@
           <form onsubmit="addSchemeSection(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: end; margin-bottom: 20px; background: var(--bg-card); padding: 14px; border-radius: 6px; border: 1px solid var(--border-hazard);">
             <div>
               <label>Section Title *</label>
-              <input type="text" id="secTitle" placeholder="e.g., Speeches / Decorum Penalty" required />
+              <input type="text" id="secTitle" placeholder="e.g., Foreign Policy & Decorum" required />
             </div>
             <div>
               <label>Max Marks *</label>
@@ -760,7 +760,7 @@
               <label>Calculation Mode</label>
               <select id="secMode">
                 <option value="average">Multi-Entry Average (e.g., Speeches)</option>
-                <option value="direct">Direct Score (+/- Discretionary/Penalty)</option>
+                <option value="direct">Direct Score (Supports +/-)</option>
               </select>
             </div>
             <div>
@@ -967,7 +967,7 @@
         { id: "sec_speeches", title: "Speeches & Interventions", max: 30, mode: "average" },
         { id: "sec_lobby", title: "Lobbying & Bloc Building", max: 25, mode: "direct" },
         { id: "sec_crisis", title: "Crisis Directives & Docs", max: 25, mode: "direct" },
-        { id: "sec_policy", title: "Foreign Policy & Decorum Modifier (+/-)", max: 20, mode: "direct" }
+        { id: "sec_policy", title: "Foreign Policy & Decorum (+/-)", max: 20, mode: "direct" }
       ],
       delegates: [
         {
@@ -995,7 +995,7 @@
       ]
     };
 
-    const STORAGE_KEY = "tqsmun2026_doomsday_state_v3";
+    const STORAGE_KEY = "tqsmun2026_doomsday_state_v4";
     let state = loadState();
     let currentWatcher = sessionStorage.getItem("tqsmun2026_watcher") || null;
     let editingDelegateId = null;
@@ -1281,7 +1281,7 @@
               </div>
               <div style="margin-bottom: 10px;">${chipsHtml}</div>
               <div style="display: flex; gap: 8px;">
-                <input type="number" id="newEntryInput_${sec.id}" min="0" max="${sec.max}" step="0.5" placeholder="Log Speech #${entries.length + 1}" />
+                <input type="number" id="newEntryInput_${sec.id}" min="-50" max="${sec.max}" step="0.5" placeholder="Log Speech #${entries.length + 1}" />
                 <button type="button" class="btn-amber btn-sm" onclick="addMultiEntry('${sec.id}')">+ Log Entry</button>
               </div>
             </div>
@@ -1292,9 +1292,9 @@
             <div style="background: var(--bg-card); border: 1px solid var(--border-hazard); padding: 14px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
               <div>
                 <strong style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 0.85rem;">${sec.title}</strong>
-                <div style="font-size: 0.78rem; color: var(--text-secondary);">Direct Score (Supports Negative Penalties e.g. -10 to +${sec.max})</div>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Direct Score (Allows negative numbers e.g. -10 up to +${sec.max})</div>
               </div>
-              <div style="width: 150px;">
+              <div style="width: 160px;">
                 <input type="number" min="-50" max="${sec.max}" step="0.5" value="${currentVal}" onchange="updateDirectScore('${sec.id}', this.value)" />
               </div>
             </div>
@@ -1310,8 +1310,8 @@
       const sec = state.scheme.find(s => s.id === secId);
       const input = document.getElementById(`newEntryInput_${secId}`);
       const val = parseFloat(input.value);
-      if (isNaN(val) || val < 0 || val > sec.max) {
-        alert(`Please enter a valid score between 0 and ${sec.max}.`);
+      if (isNaN(val) || val > sec.max) {
+        alert(`Please enter a valid score up to ${sec.max}.`);
         return;
       }
       if (!Array.isArray(del.scores[secId])) del.scores[secId] = [];
@@ -1323,10 +1323,10 @@
     function editMultiEntry(secId, index) {
       const del = state.delegates.find(d => d.id === editingDelegateId);
       const sec = state.scheme.find(s => s.id === secId);
-      const updated = prompt(`Edit Entry #${index + 1} score (0 to ${sec.max}):`, del.scores[secId][index]);
+      const updated = prompt(`Edit Entry #${index + 1} score (Max ${sec.max}):`, del.scores[secId][index]);
       if (updated === null) return;
       const num = parseFloat(updated);
-      if (isNaN(num) || num < 0 || num > sec.max) return;
+      if (isNaN(num) || num > sec.max) return;
       del.scores[secId][index] = num;
       saveState();
       renderGradeModalSections();
@@ -1567,7 +1567,7 @@
           <td>
             <select onchange="updateSchemeSection('${sec.id}', 'mode', this.value)">
               <option value="average" ${sec.mode === "average" ? "selected" : ""}>Multi-Entry Average</option>
-              <option value="direct" ${sec.mode === "direct" ? "selected" : ""}>Direct Score (+/- Discretionary/Penalty)</option>
+              <option value="direct" ${sec.mode === "direct" ? "selected" : ""}>Direct Score (Supports +/-)</option>
             </select>
           </td>
           <td style="width: 120px;"><input type="number" min="0" step="0.5" value="${sec.max}" onchange="updateSchemeSection('${sec.id}', 'max', this.value)" /></td>
@@ -1614,7 +1614,6 @@
 
       const ranked = getRankedDelegates();
 
-      // Always populate delegate selector for secure attendance check
       const selDel = document.getElementById("selectOwnPortfolioDelegate");
       const prevDelVal = selDel.value;
       selDel.innerHTML = `<option value="">-- Select Your Portfolio / Delegate Name --</option>` +
