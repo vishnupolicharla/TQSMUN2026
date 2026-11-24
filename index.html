@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TQSMUN 2026 // DOOMSDAY COMMAND TERMINAL</title>
+  <style>
+    :root {
+      --bg-void: #090a0d;
+      --bg-panel: #111319;
+      --bg-card: #171a22;
+      --bg-input: #0d0f14;
+      --border-hazard: #2b303d;
+      --accent-crimson: #e11d48;
+      --accent-crimson-glow: rgba(225, 29, 72, 0.25);
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.2);
+      --accent-emerald: #10b981;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(225, 29, 72, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(245, 158, 11, 0.06) 0%, transparent 45%),
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
+      line-height: 1.5;
+    }
+
+    /* Hazard Tape Top Bar */
+    .hazard-bar {
+      height: 6px;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--accent-amber),
+        var(--accent-amber) 12px,
+        #111 12px,
+        #111 24px
+      );
+    }
+
+    /* Header */
+    header {
+      background: rgba(17, 19, 25, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-hazard);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .doomsday-clock {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--accent-crimson);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      color: var(--accent-crimson);
+      box-shadow: 0 0 15px var(--accent-crimson-glow);
+      font-size: 13px;
+      letter-spacing: -0.5px;
+      position: relative;
+    }
+
+    .brand-title h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .brand-title h1 span {
+      color: var(--accent-crimson);
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-amber);
+      letter-spacing: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 5px 12px;
+      border-radius: 4px;
+      border: 1px solid var(--border-hazard);
+      background: var(--bg-input);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.red { background: var(--accent-crimson); box-shadow: 0 0 8px var(--accent-crimson); }
+    .dot.green { background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); }
+    .dot.amber { background: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); }
+
+    /* Buttons */
+    button {
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      border-radius: 5px;
+      border: 1px solid transparent;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--accent-crimson);
+      color: #fff;
+      box-shadow: 0 0 12px var(--accent-crimson-glow);
+    }
+    .btn-primary:hover { background: #be123c; }
+
+    .btn-amber {
+      background: var(--accent-amber);
+      color: #090a0d;
+      font-weight: 700;
+    }
+    .btn-amber:hover { background: #d97706; }
+
+    .btn-outline {
+      background: var(--bg-card);
+      border-color: var(--border-hazard);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .btn-danger {
+      background: rgba(225, 29, 72, 0.12);
+      border-color: rgba(225, 29, 72, 0.4);
+      color: #fb7185;
+    }
+    .btn-danger:hover {
+      background: var(--accent-crimson);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.78rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Navigation Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 1px solid var(--border-hazard);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: var(--bg-panel);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-hazard);
+      padding: 9px 16px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-tab.active {
+      background: var(--accent-crimson);
+      color: #fff;
+      border-color: var(--accent-crimson);
+      box-shadow: 0 0 14px var(--accent-crimson-glow);
+    }
+
+    /* Panels & Cards */
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-hazard);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-hazard);
+    }
+
+    .panel-title {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-amber);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hazard);
+      border-left: 3px solid var(--accent-crimson);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+
+    .stat-card.amber { border-left-color: var(--accent-amber); }
+    .stat-card.green { border-left-color: var(--accent-emerald); }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    /* Forms & Inputs */
+    input, select, textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      color: var(--text-primary);
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 5px;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border-hazard);
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #141720;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--accent-amber);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-hazard);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid rgba(43, 48, 61, 0.6);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Badges */
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+
+    .badge-award {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .badge-present {
+      background: rgba(16, 185, 129, 0.18);
+      border: 1px solid var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .badge-pv {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .badge-absent {
+      background: rgba(225, 29, 72, 0.18);
+      border: 1px solid var(--accent-crimson);
+      color: #fb7185;
+    }
+
+    /* Speech / Sub-entry Chips */
+    .entry-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      margin: 3px 4px 3px 0;
+    }
+
+    .entry-chip button {
+      padding: 0 4px;
+      background: transparent;
+      color: #fb7185;
+      font-size: 0.85rem;
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-panel);
+      border: 1px solid var(--accent-crimson);
+      box-shadow: 0 0 30px rgba(225, 29, 72, 0.3);
+      border-radius: 8px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-amber);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+      z-index: 200;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Delegate Dossier Card */
+    .dossier-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hazard);
+      border-top: 3px solid var(--accent-crimson);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .feedback-block {
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      border-radius: 6px;
+      padding: 14px;
+    }
+
+    .feedback-block h4 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--accent-amber);
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="hazard-bar"></div>
+
+  <header>
+    <div class="brand">
+      <div class="doomsday-clock">23:59</div>
+      <div class="brand-title">
+        <h1>TQSMUN <span>2026</span></h1>
+        <div class="brand-sub">DOOMSDAY PROTOCOL // EB COMMITTEE #1 // NOV 28–29, 2026</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="status-pill" id="publishStatusPill">
+        <span class="dot red"></span>
+        <span>RESULTS: CLASSIFIED (EB ONLY)</span>
+      </div>
+      <div class="status-pill hidden" id="activeWatcherPill">
+        <span class="dot green"></span>
+        <span id="activeWatcherLabel">WATCHER</span>
+      </div>
+      <button class="btn-primary" id="ebLoginBtn" onclick="openLoginModal()">EB Command Access</button>
+      <button class="btn-outline hidden" id="ebLogoutBtn" onclick="logoutEB()">Lock Terminal</button>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- ==================== DELEGATE PORTAL VIEW ==================== -->
+    <div id="delegateView">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">DELEGATE STANDINGS &amp; DOOMSDAY ARCHIVE</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+              Final committee results are scheduled for release on <strong>November 29, 2026 (8:00 PM – 9:00 PM)</strong> following the Closing Ceremony.
+            </p>
+          </div>
+          <div style="min-width: 240px;">
+            <input type="text" id="delegateSearchInput" placeholder="Search portfolio / delegate..." oninput="renderDelegatePortal()" />
+          </div>
+        </div>
+
+        <div id="classifiedBanner" style="text-align: center; padding: 48px 20px; border: 1px dashed var(--accent-crimson); border-radius: 8px; background: rgba(225, 29, 72, 0.04);">
+          <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800; color: var(--accent-crimson); letter-spacing: 2px; margin-bottom: 8px;">
+            [ TRANSMISSION LOCKED // CLEARANCE LEVEL: EB #1 ]
+          </div>
+          <p style="color: var(--text-secondary); max-width: 560px; margin: 0 auto 16px; font-size: 0.9rem;">
+            Executive Board #1 (Prabeer, Shrestha, Madhulika, Vishnu) is currently auditing committee logs. Standings, individual score breakdowns, awards, and EB remarks will appear here once published.
+          </p>
+          <span class="badge badge-absent">STATUS: AWAITING CLOSING CEREMONY RELEASE</span>
+        </div>
+
+        <div id="publishedContent" class="hidden">
+          <!-- Personal Dossier Selector -->
+          <div style="margin-bottom: 20px; background: var(--bg-card); padding: 16px; border-radius: 6px; border: 1px solid var(--border-hazard);">
+            <label for="selectOwnPortfolio">Inspect Your Individual Dossier, Remarks &amp; Improvement Areas:</label>
+            <select id="selectOwnPortfolio" onchange="renderSelectedDossier()">
+              <option value="">-- Select Your Portfolio / Delegate Name --</option>
+            </select>
+            <div id="selectedDossierContainer"></div>
+          </div>
+
+          <!-- Full Committee Leaderboard -->
+          <div class="panel-title" style="margin-bottom: 12px;">OFFICIAL COMMITTEE STANDINGS</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Award</th>
+                  <th>Total Score (<span id="pubMaxTotal">X</span>)</th>
+                  <th>Gap From #1</th>
+                </tr>
+              </thead>
+              <tbody id="publicLeaderboardBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== EB COMMAND CONSOLE VIEW ==================== -->
+    <div id="ebView" class="hidden">
+      <!-- Top Metrics -->
+      <div class="grid-4" style="margin-bottom: 20px;">
+        <div class="stat-card">
+          <div class="stat-label">Total Delegates</div>
+          <div class="stat-value" id="statTotalDelegates">0</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Present (Active Day)</div>
+          <div class="stat-value" id="statPresentCount">0</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Simple / 2-3 Majority</div>
+          <div class="stat-value" id="statMajority">0 / 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Max Scheme Total (X)</div>
+          <div class="stat-value" id="statSchemeTotal">0</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="tab-scoring" onclick="switchTab('tab-scoring', this)">1. Grading &amp; Delegates</button>
+        <button class="nav-tab" data-tab="tab-rollcall" onclick="switchTab('tab-rollcall', this)">2. Roll Call</button>
+        <button class="nav-tab" data-tab="tab-scheme" onclick="switchTab('tab-scheme', this)">3. Marking Scheme (X)</button>
+        <button class="nav-tab" data-tab="tab-awards" onclick="switchTab('tab-awards', this)">4. Standings, Awards &amp; Publish</button>
+        <button class="nav-tab" data-tab="tab-settings" onclick="switchTab('tab-settings', this)">5. EB Watchers &amp; Backup</button>
+      </div>
+
+      <!-- TAB 1: GRADING & DELEGATES -->
+      <div id="tab-scoring" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">ADD NEW DELEGATE / PORTFOLIO</div>
+          </div>
+          <form onsubmit="addDelegate(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end;">
+            <div>
+              <label>Portfolio / Country / Character *</label>
+              <input type="text" id="newDelPortfolio" placeholder="e.g., United States / Director Vance" required />
+            </div>
+            <div>
+              <label>Delegate Full Name (Optional)</label>
+              <input type="text" id="newDelName" placeholder="e.g., Aarav Sharma" />
+            </div>
+            <div>
+              <button type="submit" class="btn-primary" style="width: 100%;">+ Add to Committee</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">LIVE COMMITTEE MARKING MATRIX</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Click <strong>Grade / Remarks</strong> on any delegate to log multiple speeches (auto-averaged), edit direct section scores, assign awards, or write feedback.
+              </p>
+            </div>
+            <div style="min-width: 220px;">
+              <input type="text" id="ebSearchDelegate" placeholder="Filter delegates..." oninput="renderEBTable()" />
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="ebMatrixHead"></tr>
+              </thead>
+              <tbody id="ebMatrixBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ROLL CALL -->
+      <div id="tab-rollcall" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">COMMITTEE ROLL CALL TRACKER</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">Toggle attendance status across Day 1 (Nov 28) and Day 2 (Nov 29). Majority metrics update automatically.</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <label style="margin: 0;">Active Quorum Day:</label>
+              <select id="activeDaySelect" onchange="changeActiveDay()" style="width: auto;">
+                <option value="day1">Day 1 — Nov 28, 2026</option>
+                <option value="day2">Day 2 — Nov 29, 2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Day 1 (Nov 28)</th>
+                  <th>Day 2 (Nov 29)</th>
+                </tr>
+              </thead>
+              <tbody id="rollCallBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: MARKING SCHEME BUILDER -->
+      <div id="tab-scheme" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">FLEXIBLE MARKING SCHEME BUILDER (SUM = X)</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Add or modify grading sections anytime during the fictional committee. Use <strong>Multi-Entry Average</strong> for Speeches/POIs (logs Speech #1, #2, #3... and averages them) or <strong>Direct Score</strong> for single criteria.
+              </p>
+            </div>
+            <div class="status-pill">
+              <span>CURRENT X = <strong id="schemeSumBadge" style="color: var(--accent-amber);">0</strong> PTS</span>
+            </div>
+          </div>
+
+          <form onsubmit="addSchemeSection(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: end; margin-bottom: 20px; background: var(--bg-card); padding: 14px; border-radius: 6px; border: 1px solid var(--border-hazard);">
+            <div>
+              <label>Section Title *</label>
+              <input type="text" id="secTitle" placeholder="e.g., Speeches / Crisis Directives" required />
+            </div>
+            <div>
+              <label>Max Marks *</label>
+              <input type="number" id="secMax" min="1" step="0.5" placeholder="e.g., 20" required />
+            </div>
+            <div>
+              <label>Calculation Mode</label>
+              <select id="secMode">
+                <option value="average">Multi-Entry Average (e.g., Speeches)</option>
+                <option value="direct">Direct Single Score</option>
+              </select>
+            </div>
+            <div>
+              <button type="submit" class="btn-amber" style="width: 100%;">+ Add Section</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Section Name</th>
+                  <th>Mode</th>
+                  <th>Max Marks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="schemeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: STANDINGS, AWARDS & PUBLISH -->
+      <div id="tab-awards" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">AWARDS, GAP ANALYSIS &amp; RELEASE CONTROL</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Assign awards, verify point gaps from #1, and publish results after the Closing Ceremony on Nov 29 (8:00–9:00 PM).
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button id="togglePublishBtn" class="btn-primary" onclick="togglePublishState()">Publish Results to Delegates</button>
+              <button class="btn-amber" onclick="copyShareableResultsLink()">Copy Delegate Results Link</button>
+              <button class="btn-outline" onclick="exportBakedHTML()">Export Baked index.html (Netlify)</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Total (<span id="awMaxTotal">X</span>)</th>
+                  <th>Gap From #1</th>
+                  <th>Assigned Award</th>
+                  <th>Remarks &amp; Improvement</th>
+                </tr>
+              </thead>
+              <tbody id="awardsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: EB WATCHERS & BACKUP -->
+      <div id="tab-settings" class="tab-pane hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">EB #1 HIERARCHY &amp; CREDENTIALS</div>
+            </div>
+            <div id="watchersEditorList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;"></div>
+            <div style="margin-bottom: 14px;">
+              <label>Shared EB Access Passcode</label>
+              <input type="text" id="ebPasscodeInput" />
+            </div>
+            <button class="btn-primary" onclick="saveEBSettings()">Save Watchers &amp; Passcode</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">SYNC &amp; DEPLOYMENT TOOLS</div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Because Netlify hosts static files, use <strong>Export Baked index.html</strong> whenever you want your updated marks, watchers, or published results permanently embedded in the site file for everyone.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button class="btn-amber" onclick="exportBakedHTML()">Download Baked index.html for Netlify</button>
+              <button class="btn-outline" onclick="exportJSONBackup()">Export JSON Backup</button>
+              <label class="btn-outline" style="cursor: pointer; text-align: center; margin: 0;">
+                Import JSON Backup
+                <input type="file" accept=".json" onchange="importJSONBackup(event)" style="display: none;" />
+              </label>
+              <button class="btn-danger" onclick="resetAllData()">Reset Terminal to Factory Defaults</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== EB LOGIN MODAL ==================== -->
+  <div class="modal-backdrop" id="loginModal">
+    <div class="modal" style="max-width: 420px;">
+      <div class="panel-header">
+        <div class="panel-title">EB #1 TERMINAL AUTHENTICATION</div>
+        <button class="btn-outline btn-sm" onclick="closeLoginModal()">✕</button>
+      </div>
+      <form onsubmit="handleEBLogin(event)">
+        <div style="margin-bottom: 14px;">
+          <label>Select Hierarchy Identity</label>
+          <select id="loginWatcherSelect"></select>
+        </div>
+        <div style="margin-bottom: 18px;">
+          <label>Command Passcode</label>
+          <input type="password" id="loginPasscodeInput" placeholder="Enter passcode (e.g., DOOMS123)" required />
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Authenticate Watcher</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== DELEGATE GRADING & FEEDBACK MODAL ==================== -->
+  <div class="modal-backdrop" id="gradeModal">
+    <div class="modal">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title" id="gradeModalTitle">DELEGATE SCORING</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);" id="gradeModalSub">Two-way editable scoring &amp; feedback</div>
+        </div>
+        <button class="btn-outline btn-sm" onclick="closeGradeModal()">✕</button>
+      </div>
+
+      <div id="gradeModalSections" style="display: flex; flex-direction: column; gap: 16px;"></div>
+
+      <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-hazard);">
+        <div class="grid-2">
+          <div>
+            <label>Award Allocation</label>
+            <select id="modalAwardSelect">
+              <option value="">None / Participant</option>
+              <option value="Best Delegate">Best Delegate</option>
+              <option value="High Commendation">High Commendation</option>
+              <option value="Special Mention">Special Mention</option>
+              <option value="Honourable Mention">Honourable Mention</option>
+              <option value="Best Position Paper">Best Position Paper</option>
+            </select>
+          </div>
+          <div>
+            <label>Calculated Total</label>
+            <div id="modalLiveTotal" style="font-family: var(--font-mono); font-size: 1.3rem; font-weight: 800; color: var(--accent-amber); padding-top: 4px;">0 / 0</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <label>EB Remarks (Visible to Delegate on Release)</label>
+          <textarea id="modalRemarksInput" rows="2" placeholder="Overall committee performance notes..."></textarea>
+        </div>
+
+        <div style="margin-top: 12px;">
+          <label>Places Where They Can Improve</label>
+          <textarea id="modalImproveInput" rows="2" placeholder="Specific tactical, diplomatic, or procedural areas to improve..."></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+          <button class="btn-outline" onclick="closeGradeModal()">Close</button>
+          <button class="btn-primary" onclick="saveDelegateModalMeta()">Save Remarks &amp; Award</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    /* =====================================================================
+       BAKED INITIAL STATE (Updated automatically when using Export Baked HTML)
+       ===================================================================== */
+    const BAKED_STATE = null;
+
+    const DEFAULT_STATE = {
+      passcode: "DOOMS123",
+      published: false,
+      activeDay: "day1",
+      watchers: [
+        { role: "Watcher 1", name: "Prabeer" },
+        { role: "Watcher 2", name: "Shrestha" },
+        { role: "Watcher 3", name: "Madhulika" },
+        { role: "Watcher 4", name: "Vishnu" }
+      ],
+      scheme: [
+        { id: "sec_speeches", title: "Speeches & Interventions", max: 30, mode: "average" },
+        { id: "sec_lobby", title: "Lobbying & Bloc Building", max: 25, mode: "direct" },
+        { id: "sec_crisis", title: "Crisis Directives & Docs", max: 25, mode: "direct" },
+        { id: "sec_policy", title: "Foreign Policy & Conduct", max: 20, mode: "direct" }
+      ],
+      delegates: [
+        {
+          id: "del_1",
+          portfolio: "Director of Strategic Defense",
+          name: "Sample Delegate 1",
+          day1: "P+",
+          day2: "P+",
+          scores: {
+            sec_speeches: [24, 27],
+            sec_lobby: 21,
+            sec_crisis: 22,
+            sec_policy: 18
+          },
+          award: "",
+          remarks: "Strong opening stance during emergency session.",
+          improve: "Coordinate faster with allied portfolios during crisis updates."
+        },
+        {
+          id: "del_2",
+          portfolio: "Minister of Intelligence",
+          name: "Sample Delegate 2",
+          day1: "P",
+          day2: "P",
+          scores: {
+            sec_speeches: [22],
+            sec_lobby: 19,
+            sec_crisis: 20,
+            sec_policy: 17
+          },
+          award: "",
+          remarks: "Analytical interventions and solid procedural command.",
+          improve: "Take the floor more frequently during unmoderated caucuses."
+        }
+      ]
+    };
+
+    const STORAGE_KEY = "tqsmun2026_doomsday_state_v1";
+    let state = loadState();
+    let currentWatcher = sessionStorage.getItem("tqsmun2026_watcher") || null;
+    let editingDelegateId = null;
+
+    function loadState() {
+      // 1. Check URL Hash for shared published results (? or #data=...)
+      try {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith("#results=")) {
+          const encoded = decodeURIComponent(hash.replace("#results=", ""));
+          const parsed = JSON.parse(atob(encoded));
+          if (parsed && parsed.delegates) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not parse URL results payload", e);
+      }
+
+      // 2. Check Baked State if exported for Netlify
+      if (BAKED_STATE) {
+        return JSON.parse(JSON.stringify(BAKED_STATE));
+      }
+
+      // 3. Check LocalStorage
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          return JSON.parse(raw);
+        }
+      } catch (e) {
+        console.warn("LocalStorage unavailable", e);
+      }
+
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn("Failed to save to localStorage", e);
+      }
+      renderAll();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    /* =====================================================================
+       SCORE & RANKING CALCULATIONS
+       ===================================================================== */
+    function getSchemeTotal() {
+      return state.scheme.reduce((sum, s) => sum + (parseFloat(s.max) || 0), 0);
+    }
+
+    function getDelegateSectionScore(del, sec) {
+      const val = del.scores ? del.scores[sec.id] : undefined;
+      if (sec.mode === "average") {
+        if (!Array.isArray(val) || val.length === 0) return 0;
+        const sum = val.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+        return sum / val.length;
+      } else {
+        return parseFloat(val) || 0;
+      }
+    }
+
+    function getDelegateTotal(del) {
+      return state.scheme.reduce((sum, sec) => sum + getDelegateSectionScore(del, sec), 0);
+    }
+
+    function getRankedDelegates() {
+      const list = state.delegates.map(del => ({
+        ...del,
+        total: getDelegateTotal(del)
+      }));
+      list.sort((a, b) => b.total - a.total);
+      const topScore = list.length > 0 ? list[0].total : 0;
+      return list.map((item, idx) => ({
+        ...item,
+        rank: idx + 1,
+        gap: Math.max(0, topScore - item.total)
+      }));
+    }
+
+    /* =====================================================================
+       AUTHENTICATION (EB #1 HIERARCHY)
+       ===================================================================== */
+    function openLoginModal() {
+      const sel = document.getElementById("loginWatcherSelect");
+      sel.innerHTML = state.watchers
+        .map(w => `<option value="${w.role}: ${w.name}">${w.role} — ${w.name}</option>`)
+        .join("");
+      document.getElementById("loginPasscodeInput").value = "";
+      document.getElementById("loginModal").classList.add("open");
+    }
+
+    function closeLoginModal() {
+      document.getElementById("loginModal").classList.remove("open");
+    }
+
+    function handleEBLogin(e) {
+      e.preventDefault();
+      const entered = document.getElementById("loginPasscodeInput").value.trim();
+      const watcher = document.getElementById("loginWatcherSelect").value;
+      if (entered === state.passcode) {
+        currentWatcher = watcher;
+        sessionStorage.setItem("tqsmun2026_watcher", watcher);
+        closeLoginModal();
+        showToast(`ACCESS GRANTED // ${watcher.toUpperCase()}`);
+        renderAll();
+      } else {
+        alert("ACCESS DENIED: Invalid EB Passcode.");
+      }
+    }
+
+    function logoutEB() {
+      currentWatcher = null;
+      sessionStorage.removeItem("tqsmun2026_watcher");
+      showToast("TERMINAL LOCKED // DELEGATE VIEW ACTIVE");
+      renderAll();
+    }
+
+    /* =====================================================================
+       TABS & NAVIGATION
+       ===================================================================== */
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.add("hidden"));
+      document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+      document.getElementById(tabId).classList.remove("hidden");
+      btn.classList.add("active");
+    }
+
+    /* =====================================================================
+       DELEGATE CRUD & ROLL CALL
+       ===================================================================== */
+    function addDelegate(e) {
+      e.preventDefault();
+      const portfolio = document.getElementById("newDelPortfolio").value.trim();
+      const name = document.getElementById("newDelName").value.trim();
+      if (!portfolio) return;
+
+      const scores = {};
+      state.scheme.forEach(s => {
+        scores[s.id] = s.mode === "average" ? [] : 0;
+      });
+
+      state.delegates.push({
+        id: "del_" + Date.now(),
+        portfolio,
+        name,
+        day1: "P+",
+        day2: "P+",
+        scores,
+        award: "",
+        remarks: "",
+        improve: ""
+      });
+
+      document.getElementById("newDelPortfolio").value = "";
+      document.getElementById("newDelName").value = "";
+      saveState();
+      showToast(`Added ${portfolio}`);
+    }
+
+    function deleteDelegate(id) {
+      if (!confirm("Remove this delegate and all their logged scores?")) return;
+      state.delegates = state.delegates.filter(d => d.id !== id);
+      saveState();
+      showToast("Delegate removed.");
+    }
+
+    function cycleAttendance(id, dayKey) {
+      const order = ["P+", "P", "A"];
+      const del = state.delegates.find(d => d.id === id);
+      if (!del) return;
+      const next = order[(order.indexOf(del[dayKey]) + 1) % order.length];
+      del[dayKey] = next;
+      saveState();
+    }
+
+    function changeActiveDay() {
+      state.activeDay = document.getElementById("activeDaySelect").value;
+      saveState();
+    }
+
+    /* =====================================================================
+       MARKING SCHEME BUILDER (FLEXIBLE X)
+       ===================================================================== */
+    function addSchemeSection(e) {
+      e.preventDefault();
+      const title = document.getElementById("secTitle").value.trim();
+      const max = parseFloat(document.getElementById("secMax").value);
+      const mode = document.getElementById("secMode").value;
+      if (!title || isNaN(max) || max <= 0) return;
+
+      const id = "sec_" + Date.now();
+      state.scheme.push({ id, title, max, mode });
+      state.delegates.forEach(d => {
+        if (!d.scores) d.scores = {};
+        d.scores[id] = mode === "average" ? [] : 0;
+      });
+
+      document.getElementById("secTitle").value = "";
+      document.getElementById("secMax").value = "";
+      saveState();
+      showToast(`Added section: ${title} (${max} pts)`);
+    }
+
+    function updateSchemeSection(id, field, value) {
+      const sec = state.scheme.find(s => s.id === id);
+      if (!sec) return;
+      if (field === "max") {
+        const num = parseFloat(value);
+        if (!isNaN(num) && num > 0) sec.max = num;
+      } else if (field === "title") {
+        if (value.trim()) sec.title = value.trim();
+      } else if (field === "mode") {
+        sec.mode = value;
+        state.delegates.forEach(d => {
+          if (!d.scores) d.scores = {};
+          const cur = d.scores[id];
+          if (value === "average" && !Array.isArray(cur)) {
+            d.scores[id] = cur > 0 ? [cur] : [];
+          } else if (value === "direct" && Array.isArray(cur)) {
+            const avg = cur.length ? cur.reduce((a, b) => a + b, 0) / cur.length : 0;
+            d.scores[id] = Number(avg.toFixed(2));
+          }
+        });
+      }
+      saveState();
+    }
+
+    function deleteSchemeSection(id) {
+      if (!confirm("Delete this marking section? Scores in this column will be removed.")) return;
+      state.scheme = state.scheme.filter(s => s.id !== id);
+      state.delegates.forEach(d => {
+        if (d.scores) delete d.scores[id];
+      });
+      saveState();
+      showToast("Section removed.");
+    }
+
+    /* =====================================================================
+       TWO-WAY DELEGATE GRADING MODAL
+       ===================================================================== */
+    function openGradeModal(delId) {
+      editingDelegateId = delId;
+      const del = state.delegates.find(d => d.id === delId);
+      if (!del) return;
+
+      document.getElementById("gradeModalTitle").textContent = del.portfolio;
+      document.getElementById("gradeModalSub").textContent = del.name ? `Delegate: ${del.name}` : "Two-way editable marking & feedback";
+      document.getElementById("modalAwardSelect").value = del.award || "";
+      document.getElementById("modalRemarksInput").value = del.remarks || "";
+      document.getElementById("modalImproveInput").value = del.improve || "";
+
+      renderGradeModalSections();
+      document.getElementById("gradeModal").classList.add("open");
+    }
+
+    function closeGradeModal() {
+      editingDelegateId = null;
+      document.getElementById("gradeModal").classList.remove("open");
+    }
+
+    function renderGradeModalSections() {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      if (!del) return;
+
+      const container = document.getElementById("gradeModalSections");
+      container.innerHTML = state.scheme.map(sec => {
+        const avgOrVal = getDelegateSectionScore(del, sec);
+
+        if (sec.mode === "average") {
+          const entries = Array.isArray(del.scores[sec.id]) ? del.scores[sec.id] : [];
+          const chipsHtml = entries.length
+            ? entries.map((val, idx) => `
+                <span class="entry-chip">
+                  <span>#${idx + 1}: <strong>${val}</strong>/${sec.max}</span>
+                  <button type="button" title="Edit Entry" onclick="editMultiEntry('${sec.id}', ${idx})">✎</button>
+                  <button type="button" title="Remove Entry" onclick="removeMultiEntry('${sec.id}', ${idx})">✕</button>
+                </span>
+              `).join("")
+            : `<span style="font-size: 0.8rem; color: var(--text-muted);">No entries logged yet (Average = 0)</span>`;
+
+          return `
+            <div style="background: var(--bg-card); border: 1px solid var(--border-hazard); padding: 14px; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 0.85rem;">${sec.title} (Max ${sec.max})</strong>
+                <span class="badge badge-present">AVG: ${avgOrVal.toFixed(2)} / ${sec.max}</span>
+              </div>
+              <div style="margin-bottom: 10px;">${chipsHtml}</div>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" id="newEntryInput_${sec.id}" min="0" max="${sec.max}" step="0.5" placeholder="Log Speech #${entries.length + 1} score (0–${sec.max})" />
+                <button type="button" class="btn-amber btn-sm" onclick="addMultiEntry('${sec.id}')">+ Log Entry</button>
+              </div>
+            </div>
+          `;
+        } else {
+          const currentVal = del.scores[sec.id] ?? 0;
+          return `
+            <div style="background: var(--bg-card); border: 1px solid var(--border-hazard); padding: 14px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div>
+                <strong style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 0.85rem;">${sec.title}</strong>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Direct Section Score (0 to ${sec.max})</div>
+              </div>
+              <div style="width: 140px;">
+                <input type="number" min="0" max="${sec.max}" step="0.5" value="${currentVal}" onchange="updateDirectScore('${sec.id}', this.value)" />
+              </div>
+            </div>
+          `;
+        }
+      }).join("");
+
+      document.getElementById("modalLiveTotal").textContent = `${getDelegateTotal(del).toFixed(2)} / ${getSchemeTotal()}`;
+    }
+
+    function addMultiEntry(secId) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      const input = document.getElementById(`newEntryInput_${secId}`);
+      const val = parseFloat(input.value);
+      if (isNaN(val) || val < 0 || val > sec.max) {
+        alert(`Please enter a valid score between 0 and ${sec.max}.`);
+        return;
+      }
+      if (!Array.isArray(del.scores[secId])) del.scores[secId] = [];
+      del.scores[secId].push(val);
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function editMultiEntry(secId, index) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      const current = del.scores[secId][index];
+      const updated = prompt(`Edit Entry #${index + 1} score (0 to ${sec.max}):`, current);
+      if (updated === null) return;
+      const num = parseFloat(updated);
+      if (isNaN(num) || num < 0 || num > sec.max) {
+        alert(`Score must be between 0 and ${sec.max}.`);
+        return;
+      }
+      del.scores[secId][index] = num;
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function removeMultiEntry(secId, index) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      del.scores[secId].splice(index, 1);
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function updateDirectScore(secId, value) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      let num = parseFloat(value);
+      if (isNaN(num) || num < 0) num = 0;
+      if (num > sec.max) num = sec.max;
+      del.scores[secId] = num;
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function saveDelegateModalMeta() {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      if (!del) return;
+      del.award = document.getElementById("modalAwardSelect").value;
+      del.remarks = document.getElementById("modalRemarksInput").value.trim();
+      del.improve = document.getElementById("modalImproveInput").value.trim();
+      saveState();
+      closeGradeModal();
+      showToast(`Saved updates for ${del.portfolio}`);
+    }
+
+    function updateAwardInline(delId, awardVal) {
+      const del = state.delegates.find(d => d.id === delId);
+      if (!del) return;
+      del.award = awardVal;
+      saveState();
+      showToast(`Award updated for ${del.portfolio}`);
+    }
+
+    /* =====================================================================
+       PUBLISHING, SHARING & SETTINGS
+       ===================================================================== */
+    function togglePublishState() {
+      state.published = !state.published;
+      saveState();
+      showToast(state.published ? "RESULTS PUBLISHED TO DELEGATES" : "RESULTS LOCKED (CLASSIFIED)");
+    }
+
+    function copyShareableResultsLink() {
+      const publicPayload = {
+        published: true,
+        scheme: state.scheme,
+        delegates: state.delegates
+      };
+      const encoded = encodeURIComponent(btoa(JSON.stringify(publicPayload)));
+      const baseUrl = window.location.href.split("#")[0];
+      const shareUrl = `${baseUrl}#results=${encoded}`;
+
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        showToast("Delegate Results Link copied to clipboard!");
+      }).catch(() => {
+        prompt("Copy this Delegate Results Link:", shareUrl);
+      });
+    }
+
+    function exportBakedHTML() {
+      const docClone = document.documentElement.cloneNode(true);
+      // Clean transient modals/inputs in exported HTML
+      const scripts = docClone.querySelectorAll("script");
+      scripts.forEach(sc => {
+        if (sc.textContent.includes("const BAKED_STATE =")) {
+          sc.textContent = sc.textContent.replace(
+            /const BAKED_STATE =[\s\S]*?;/,
+            `const BAKED_STATE = ${JSON.stringify(state)};`
+          );
+        }
+      });
+
+      const fullHtml = "<!DOCTYPE html>\n" + docClone.outerHTML;
+      const blob = new Blob([fullHtml], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "index.html";
+      a.click();
+      showToast("Downloaded baked index.html for Netlify!");
+    }
+
+    function exportJSONBackup() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "tqsmun2026_backup.json";
+      a.click();
+    }
+
+    function importJSONBackup(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.delegates && parsed.scheme) {
+            state = parsed;
+            saveState();
+            showToast("Backup restored successfully!");
+          } else {
+            alert("Invalid backup file format.");
+          }
+        } catch (err) {
+          alert("Error reading JSON file.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function saveEBSettings() {
+      const inputs = document.querySelectorAll(".watcher-name-input");
+      inputs.forEach((inp, idx) => {
+        if (inp.value.trim()) state.watchers[idx].name = inp.value.trim();
+      });
+      const newPass = document.getElementById("ebPasscodeInput").value.trim();
+      if (newPass) state.passcode = newPass;
+      saveState();
+      showToast("EB Watchers & Passcode updated!");
+    }
+
+    function resetAllData() {
+      if (!confirm("Reset all delegates, scores, and settings to factory defaults?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      saveState();
+      showToast("Terminal reset to factory defaults.");
+    }
+
+    /* =====================================================================
+       RENDERING ENGINE
+       ===================================================================== */
+    function renderAll() {
+      // Header Status
+      const pill = document.getElementById("publishStatusPill");
+      if (state.published) {
+        pill.innerHTML = `<span class="dot green"></span><span>RESULTS: PUBLISHED (PUBLIC)</span>`;
+      } else {
+        pill.innerHTML = `<span class="dot red"></span><span>RESULTS: CLASSIFIED (EB ONLY)</span>`;
+      }
+
+      if (currentWatcher) {
+        document.getElementById("ebLoginBtn").classList.add("hidden");
+        document.getElementById("ebLogoutBtn").classList.remove("hidden");
+        document.getElementById("activeWatcherPill").classList.remove("hidden");
+        document.getElementById("activeWatcherLabel").textContent = currentWatcher.toUpperCase();
+        document.getElementById("delegateView").classList.add("hidden");
+        document.getElementById("ebView").classList.remove("hidden");
+        renderEBConsole();
+      } else {
+        document.getElementById("ebLoginBtn").classList.remove("hidden");
+        document.getElementById("ebLogoutBtn").classList.add("hidden");
+        document.getElementById("activeWatcherPill").classList.add("hidden");
+        document.getElementById("ebView").classList.add("hidden");
+        document.getElementById("delegateView").classList.remove("hidden");
+        renderDelegatePortal();
+      }
+    }
+
+    function renderEBConsole() {
+      const schemeTotal = getSchemeTotal();
+      const activeDay = state.activeDay || "day1";
+      const presentCount = state.delegates.filter(d => d[activeDay] === "P+" || d[activeDay] === "P").length;
+      const simpleMaj = presentCount > 0 ? Math.floor(presentCount / 2) + 1 : 0;
+      const twoThirdMaj = presentCount > 0 ? Math.ceil((presentCount * 2) / 3) : 0;
+
+      document.getElementById("statTotalDelegates").textContent = state.delegates.length;
+      document.getElementById("statPresentCount").textContent = `${presentCount} / ${state.delegates.length}`;
+      document.getElementById("statMajority").textContent = `${simpleMaj} / ${twoThirdMaj}`;
+      document.getElementById("statSchemeTotal").textContent = schemeTotal;
+      document.getElementById("schemeSumBadge").textContent = schemeTotal;
+      document.getElementById("awMaxTotal").textContent = schemeTotal;
+      document.getElementById("activeDaySelect").value = activeDay;
+
+      // Publish Button State
+      const pubBtn = document.getElementById("togglePublishBtn");
+      if (state.published) {
+        pubBtn.textContent = "Unpublish (Lock Results)";
+        pubBtn.className = "btn-danger";
+      } else {
+        pubBtn.textContent = "Publish Results to Delegates";
+        pubBtn.className = "btn-primary";
+      }
+
+      renderEBTable();
+      renderRollCallTable();
+      renderSchemeTable();
+      renderAwardsTable();
+      renderSettingsTab();
+    }
+
+    function renderEBTable() {
+      const query = (document.getElementById("ebSearchDelegate").value || "").toLowerCase();
+      const head = document.getElementById("ebMatrixHead");
+      const body = document.getElementById("ebMatrixBody");
+
+      head.innerHTML = `
+        <th>Portfolio / Delegate</th>
+        ${state.scheme.map(s => `<th>${s.title} (${s.max})</th>`).join("")}
+        <th>Total (${getSchemeTotal()})</th>
+        <th>Actions</th>
+      `;
+
+      const filtered = state.delegates.filter(d =>
+        d.portfolio.toLowerCase().includes(query) || (d.name && d.name.toLowerCase().includes(query))
+      );
+
+      body.innerHTML = filtered.map(del => {
+        const total = getDelegateTotal(del);
+        return `
+          <tr>
+            <td>
+              <strong>${del.portfolio}</strong>
+              ${del.name ? `<div style="font-size: 0.78rem; color: var(--text-secondary);">${del.name}</div>` : ""}
+              ${del.award ? `<div style="margin-top: 4px;"><span class="badge badge-award">${del.award}</span></div>` : ""}
+            </td>
+            ${state.scheme.map(sec => {
+              const sc = getDelegateSectionScore(del, sec);
+              const countTag = sec.mode === "average" && Array.isArray(del.scores[sec.id])
+                ? ` <span style="font-size:0.72rem; color:var(--text-muted);">(${del.scores[sec.id].length})</span>`
+                : "";
+              return `<td style="font-family: var(--font-mono);">${sc.toFixed(1)}${countTag}</td>`;
+            }).join("")}
+            <td style="font-family: var(--font-mono); font-weight: 800; color: var(--accent-amber);">${total.toFixed(2)}</td>
+            <td style="white-space: nowrap;">
+              <button class="btn-amber btn-sm" onclick="openGradeModal('${del.id}')">Grade / Remarks</button>
+              <button class="btn-danger btn-sm" onclick="deleteDelegate('${del.id}')">✕</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderRollCallTable() {
+      const body = document.getElementById("rollCallBody");
+      const getBadge = status => {
+        if (status === "P+") return `<span class="badge badge-present">Present &amp; Voting</span>`;
+        if (status === "P") return `<span class="badge badge-pv">Present</span>`;
+        return `<span class="badge badge-absent">Absent</span>`;
+      };
+
+      body.innerHTML = state.delegates.map((del, idx) => `
+        <tr>
+          <td style="font-family: var(--font-mono); color: var(--text-muted);">${idx + 1}</td>
+          <td><strong>${del.portfolio}</strong> ${del.name ? `<span style="color:var(--text-secondary);">(${del.name})</span>` : ""}</td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="cycleAttendance('${del.id}', 'day1')">
+              ${getBadge(del.day1)}
+            </button>
+          </td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="cycleAttendance('${del.id}', 'day2')">
+              ${getBadge(del.day2)}
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSchemeTable() {
+      const body = document.getElementById("schemeTableBody");
+      body.innerHTML = state.scheme.map(sec => `
+        <tr>
+          <td>
+            <input type="text" value="${sec.title}" onchange="updateSchemeSection('${sec.id}', 'title', this.value)" />
+          </td>
+          <td>
+            <select onchange="updateSchemeSection('${sec.id}', 'mode', this.value)">
+              <option value="average" ${sec.mode === "average" ? "selected" : ""}>Multi-Entry Average (Speeches)</option>
+              <option value="direct" ${sec.mode === "direct" ? "selected" : ""}>Direct Single Score</option>
+            </select>
+          </td>
+          <td style="width: 120px;">
+            <input type="number" min="1" step="0.5" value="${sec.max}" onchange="updateSchemeSection('${sec.id}', 'max', this.value)" />
+          </td>
+          <td>
+            <button class="btn-danger btn-sm" onclick="deleteSchemeSection('${sec.id}')">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAwardsTable() {
+      const ranked = getRankedDelegates();
+      const body = document.getElementById("awardsTableBody");
+      const awardsList = ["", "Best Delegate", "High Commendation", "Special Mention", "Honourable Mention", "Best Position Paper"];
+
+      body.innerHTML = ranked.map(del => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 800; color: ${del.rank === 1 ? 'var(--accent-amber)' : '#fff'};">#${del.rank}</td>
+          <td>
+            <strong>${del.portfolio}</strong>
+            ${del.name ? `<div style="font-size:0.78rem; color:var(--text-secondary);">${del.name}</div>` : ""}
+          </td>
+          <td style="font-family: var(--font-mono); font-weight: 700;">${del.total.toFixed(2)}</td>
+          <td style="font-family: var(--font-mono); color: ${del.gap === 0 ? 'var(--accent-emerald)' : '#fb7185'};">
+            ${del.gap === 0 ? "LEADER (0.00)" : `-${del.gap.toFixed(2)}`}
+          </td>
+          <td>
+            <select onchange="updateAwardInline('${del.id}', this.value)">
+              ${awardsList.map(aw => `<option value="${aw}" ${del.award === aw ? "selected" : ""}>${aw || "-- None --"}</option>`).join("")}
+            </select>
+          </td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="openGradeModal('${del.id}')">Edit Remarks / Feedback</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSettingsTab() {
+      const list = document.getElementById("watchersEditorList");
+      list.innerHTML = state.watchers.map(w => `
+        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 10px; align-items: center;">
+          <span style="font-family: var(--font-mono); font-size: 0.82rem; color: var(--accent-amber);">${w.role}</span>
+          <input type="text" class="watcher-name-input" value="${w.name}" />
+        </div>
+      `).join("");
+      document.getElementById("ebPasscodeInput").value = state.passcode;
+    }
+
+    /* =====================================================================
+       DELEGATE PORTAL RENDERING
+       ===================================================================== */
+    function renderDelegatePortal() {
+      const classified = document.getElementById("classifiedBanner");
+      const pubContent = document.getElementById("publishedContent");
+
+      if (!state.published) {
+        classified.classList.remove("hidden");
+        pubContent.classList.add("hidden");
+        return;
+      }
+
+      classified.classList.add("hidden");
+      pubContent.classList.remove("hidden");
+
+      const ranked = getRankedDelegates();
+      const schemeTotal = getSchemeTotal();
+      document.getElementById("pubMaxTotal").textContent = schemeTotal;
+
+      // Populate selector while keeping selection
+      const sel = document.getElementById("selectOwnPortfolio");
+      const prevVal = sel.value;
+      sel.innerHTML = `<option value="">-- Select Your Portfolio / Delegate Name --</option>` +
+        ranked.map(d => `<option value="${d.id}">#${d.rank} — ${d.portfolio} ${d.name ? `(${d.name})` : ""}</option>`).join("");
+      if (prevVal) sel.value = prevVal;
+
+      renderSelectedDossier();
+
+      // Filter public leaderboard
+      const q = (document.getElementById("delegateSearchInput").value || "").toLowerCase();
+      const filtered = ranked.filter(d =>
+        d.portfolio.toLowerCase().includes(q) || (d.name && d.name.toLowerCase().includes(q))
+      );
+
+      document.getElementById("publicLeaderboardBody").innerHTML = filtered.map(d => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 800; color: ${d.rank === 1 ? 'var(--accent-amber)' : '#fff'};">#${d.rank}</td>
+          <td>
+            <strong>${d.portfolio}</strong>
+            ${d.name ? `<div style="font-size: 0.78rem; color: var(--text-secondary);">${d.name}</div>` : ""}
+          </td>
+          <td>${d.award ? `<span class="badge badge-award">${d.award}</span>` : `<span style="color:var(--text-muted);">—</span>`}</td>
+          <td style="font-family: var(--font-mono); font-weight: 700;">${d.total.toFixed(2)}</td>
+          <td style="font-family: var(--font-mono); color: ${d.gap === 0 ? 'var(--accent-emerald)' : '#fb7185'};">
+            ${d.gap === 0 ? "0.00 (TOP)" : `-${d.gap.toFixed(2)}`}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSelectedDossier() {
+      const id = document.getElementById("selectOwnPortfolio").value;
+      const box = document.getElementById("selectedDossierContainer");
+      if (!id) {
+        box.innerHTML = "";
+        return;
+      }
+
+      const ranked = getRankedDelegates();
+      const d = ranked.find(item => item.id === id);
+      if (!d) return;
+
+      const breakdownHtml = state.scheme.map(sec => {
+        const sc = getDelegateSectionScore(d, sec);
+        let detail = "";
+        if (sec.mode === "average" && Array.isArray(d.scores[sec.id]) && d.scores[sec.id].length > 0) {
+          detail = ` (Entries: ${d.scores[sec.id].join(", ")})`;
+        }
+        return `
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(43,48,61,0.5); font-size: 0.85rem;">
+            <span>${sec.title}<span style="color:var(--text-muted); font-size:0.78rem;">${detail}</span></span>
+            <strong style="font-family: var(--font-mono); color: var(--accent-amber);">${sc.toFixed(2)} / ${sec.max}</strong>
+          </div>
+        `;
+      }).join("");
+
+      box.innerHTML = `
+        <div class="dossier-box">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-amber);">RANK #${d.rank} OF ${ranked.length} // GAP FROM #1: ${d.gap === 0 ? "0.00 (LEADER)" : `-${d.gap.toFixed(2)} PTS`}</div>
+              <h3 style="font-size: 1.25rem; margin-top: 2px;">${d.portfolio} ${d.name ? `<span style="font-weight:400; color:var(--text-secondary);">— ${d.name}</span>` : ""}</h3>
+            </div>
+            <div style="text-align: right;">
+              ${d.award ? `<div style="margin-bottom: 4px;"><span class="badge badge-award">${d.award}</span></div>` : ""}
+              <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 800;">TOTAL: ${d.total.toFixed(2)} / ${getSchemeTotal()}</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px;">SECTION SCORE BREAKDOWN</div>
+            ${breakdownHtml}
+          </div>
+
+          <div class="feedback-grid">
+            <div class="feedback-block">
+              <h4>Executive Board Remarks</h4>
+              <p style="font-size: 0.88rem; color: var(--text-primary);">${d.remarks || "No specific remarks recorded."}</p>
+            </div>
+            <div class="feedback-block">
+              <h4>Places Where You Can Improve</h4>
+              <p style="font-size: 0.88rem; color: var(--text-primary);">${d.improve || "No specific improvement notes recorded."}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Boot Terminal
+    renderAll();
+  </script>
+</body>
+</html>
