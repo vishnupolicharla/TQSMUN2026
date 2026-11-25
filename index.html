@@ -375,7 +375,7 @@ async function routeUser(user) {
  if(ebError) throw ebError;
  show('loginScreen',false);show('unassignedScreen',false);show('userPill',true);show('signOutBtn',true);$('userPill').textContent=user.email||'Verified session';
  if(ebRow?.role==='eb') {
-   activeRole='eb';ebPosition=ebRow.eb_position;delegateProfile=null;
+   activeRole=ebRow.role;ebPosition=ebRow.eb_position;delegateProfile=null;
    show('delegateShell',false);show('ebShell',true);
    $('ebPositionTag').textContent=positionLabel(ebPosition);
    await loadEBAll();
