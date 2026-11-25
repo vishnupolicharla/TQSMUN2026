@@ -1,0 +1,2456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TQSMUN 2026 | DOOMSDAY HYPERCORE // GLOBAL RESPONSE NETWORK</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap');
+    :root {
+      --bg-void: #060709;
+      --bg-panel: #0d0f14;
+      --bg-card: #12151c;
+      --bg-input: #08090c;
+      --border-hazard: #222734;
+      --accent-crimson: #f43f5e;
+      --accent-crimson-glow: rgba(244, 63, 94, 0.3);
+      --accent-amber: #fbbf24;
+      --accent-amber-glow: rgba(251, 191, 36, 0.25);
+      --accent-emerald: #34d399;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 10%, rgba(244, 63, 94, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 90% 90%, rgba(251, 191, 36, 0.05) 0%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 24px 24px, 24px 24px;
+      line-height: 1.5;
+    }
+
+    /* Hazard Bar */
+    .hazard-bar {
+      height: 6px;
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--accent-amber),
+        var(--accent-amber) 14px,
+        #0c0d10 14px,
+        #0c0d10 28px
+      );
+      box-shadow: 0 0 12px var(--accent-amber-glow);
+    }
+
+    header {
+      background: rgba(13, 15, 20, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-hazard);
+      padding: 16px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .doomsday-clock {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--accent-crimson);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 900;
+      color: var(--accent-crimson);
+      box-shadow: 0 0 18px var(--accent-crimson-glow);
+      font-size: 13px;
+      letter-spacing: -0.5px;
+      animation: pulseClock 2s infinite;
+    }
+
+    @keyframes pulseClock {
+      0% { box-shadow: 0 0 10px var(--accent-crimson-glow); }
+      50% { box-shadow: 0 0 22px var(--accent-crimson); }
+      100% { box-shadow: 0 0 10px var(--accent-crimson-glow); }
+    }
+
+    .brand-title h1 {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+
+    .brand-title h1 span {
+      color: var(--accent-crimson);
+      text-shadow: 0 0 10px var(--accent-crimson-glow);
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-amber);
+      letter-spacing: 1.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--border-hazard);
+      background: var(--bg-input);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.red { background: var(--accent-crimson); box-shadow: 0 0 8px var(--accent-crimson); }
+    .dot.green { background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); }
+    .dot.amber { background: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); }
+
+    /* Buttons */
+    button {
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: var(--accent-crimson);
+      color: #fff;
+      box-shadow: 0 0 15px var(--accent-crimson-glow);
+    }
+    .btn-primary:hover { background: #e11d48; box-shadow: 0 0 22px var(--accent-crimson); }
+
+    .btn-amber {
+      background: var(--accent-amber);
+      color: #060709;
+      font-weight: 800;
+      box-shadow: 0 0 12px var(--accent-amber-glow);
+    }
+    .btn-amber:hover { background: #f59e0b; }
+
+    .btn-outline {
+      background: var(--bg-card);
+      border-color: var(--border-hazard);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover {
+      border-color: var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .btn-danger {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.4);
+      color: #fda4af;
+    }
+    .btn-danger:hover {
+      background: var(--accent-crimson);
+      color: #fff;
+    }
+
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 0.75rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    /* Tabs */
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-hazard);
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .nav-tab {
+      background: var(--bg-panel);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-hazard);
+      padding: 10px 18px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .nav-tab.active {
+      background: var(--accent-crimson);
+      color: #fff;
+      border-color: var(--accent-crimson);
+      box-shadow: 0 0 15px var(--accent-crimson-glow);
+    }
+
+    /* Panels */
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-hazard);
+      border-radius: 6px;
+      padding: 24px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 4px; height: 100%;
+      background: var(--accent-amber);
+      border-top-left-radius: 6px;
+      border-bottom-left-radius: 6px;
+    }
+
+    .panel.crimson-border::before {
+      background: var(--accent-crimson);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-hazard);
+    }
+
+    .panel-title {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent-amber);
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hazard);
+      border-left: 3px solid var(--accent-crimson);
+      border-radius: 6px;
+      padding: 16px;
+    }
+
+    .stat-card.amber { border-left-color: var(--accent-amber); }
+    .stat-card.green { border-left-color: var(--accent-emerald); }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 900;
+      font-family: var(--font-mono);
+      color: #fff;
+    }
+
+    /* Inputs & Forms */
+    input, select, textarea {
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      color: var(--text-primary);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      width: 100%;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-amber);
+      box-shadow: 0 0 10px var(--accent-amber-glow);
+    }
+
+    label {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border-hazard);
+      border-radius: 6px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #090b10;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--accent-amber);
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-hazard);
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(34, 39, 52, 0.7);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.015);
+    }
+
+    /* Badges */
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 800;
+      display: inline-block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-award {
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .badge-present {
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid var(--accent-emerald);
+      color: var(--accent-emerald);
+    }
+
+    .badge-pv {
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid var(--accent-amber);
+      color: var(--accent-amber);
+    }
+
+    .badge-absent {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid var(--accent-crimson);
+      color: #fda4af;
+    }
+
+    .entry-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      margin: 3px 4px 3px 0;
+    }
+
+    .entry-chip button {
+      padding: 0 4px;
+      background: transparent;
+      color: #fda4af;
+      font-size: 0.85rem;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-panel);
+      border: 1px solid var(--accent-crimson);
+      box-shadow: 0 0 35px rgba(244, 63, 94, 0.35);
+      border-radius: 8px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .hidden { display: none !important; }
+
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--accent-amber);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+      z-index: 200;
+      transform: translateY(120px);
+      opacity: 0;
+      transition: all 0.25s ease;
+    }
+
+    #toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .dossier-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hazard);
+      border-top: 3px solid var(--accent-crimson);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 16px;
+    }
+
+    .feedback-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .feedback-block {
+      background: var(--bg-input);
+      border: 1px solid var(--border-hazard);
+      border-radius: 6px;
+      padding: 14px;
+    }
+
+    .feedback-block h4 {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      color: var(--accent-amber);
+      margin-bottom: 6px;
+    }
+  
+
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    /* ================================================================
+       DOOMSDAY // CINEMATIC AWARENESS INTERFACE REFRESH
+       Visual layer only: existing portal logic, IDs and workflows retained.
+       ================================================================ */
+    :root {
+      --bg-void: #07090d;
+      --bg-panel: rgba(13, 17, 24, .88);
+      --bg-card: rgba(19, 25, 34, .88);
+      --bg-input: rgba(7, 10, 15, .92);
+      --border-hazard: rgba(142, 157, 176, .18);
+      --accent-crimson: #ff4b5f;
+      --accent-crimson-glow: rgba(255, 75, 95, .24);
+      --accent-amber: #f4bd63;
+      --accent-amber-glow: rgba(244, 189, 99, .22);
+      --accent-emerald: #56d6ad;
+      --text-primary: #f4f5f7;
+      --text-secondary: #a7b0bd;
+      --text-muted: #788493;
+      --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+      --font-sans: 'Manrope', 'Segoe UI', sans-serif;
+    }
+
+
+    html { scroll-behavior: smooth; }
+    body {
+      position: relative;
+      isolation: isolate;
+      background-color: #07090d;
+      background-image:
+        linear-gradient(180deg, rgba(5, 7, 11, .78), rgba(5, 7, 11, .94) 46%, #07090d 100%),
+        radial-gradient(ellipse at 50% -10%, rgba(185, 55, 63, .22), transparent 48%),
+        url('https://images.unsplash.com/photo-1534088568595-a066f410bcda?auto=format&fit=crop&w=2400&q=85');
+      background-size: cover, 100% 760px, cover;
+      background-position: center, top center, center 20%;
+      background-attachment: fixed;
+      letter-spacing: .01em;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
+    }
+    ::selection { background: rgba(255, 75, 95, .32); color: #fff; }
+    * { scrollbar-width: thin; scrollbar-color: rgba(244,189,99,.42) rgba(10,13,18,.8); }
+    *::-webkit-scrollbar { width: 9px; height: 9px; }
+    *::-webkit-scrollbar-track { background: #090c11; }
+    *::-webkit-scrollbar-thumb { background: rgba(244,189,99,.38); border: 2px solid #090c11; border-radius: 20px; }
+
+    .hazard-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #ff4b5f 0%, #f4bd63 32%, #f7e4bb 50%, #f4bd63 68%, #ff4b5f 100%);
+      box-shadow: 0 0 22px rgba(255,75,95,.35);
+    }
+    header {
+      padding: 15px clamp(16px, 3vw, 42px);
+      background: rgba(7, 10, 15, .78);
+      border-bottom: 1px solid rgba(244,189,99,.18);
+      box-shadow: 0 12px 45px rgba(0,0,0,.28);
+      backdrop-filter: blur(22px) saturate(135%);
+    }
+    .brand { gap: 14px; }
+    .doomsday-clock {
+      width: 54px;
+      height: 54px;
+      border: 1px solid rgba(244,189,99,.72);
+      color: #f4bd63;
+      background: radial-gradient(circle, rgba(244,189,99,.13), rgba(255,75,95,.06) 58%, transparent 70%);
+      box-shadow: 0 0 0 5px rgba(244,189,99,.045), 0 0 26px rgba(255,75,95,.16), inset 0 0 16px rgba(244,189,99,.12);
+      position: relative;
+      font-size: 10px;
+      letter-spacing: -1px;
+    }
+    .doomsday-clock::before, .doomsday-clock::after {
+      content: '';
+      position: absolute;
+      border: 1px solid rgba(244,189,99,.32);
+      border-radius: 50%;
+      inset: 5px;
+    }
+    .doomsday-clock::after { inset: -6px; border-color: rgba(255,75,95,.17); border-style: dashed; animation: orbit 28s linear infinite; }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+    @keyframes glowBreath { 0%,100% { opacity:.72; } 50% { opacity:1; } }
+    .doomsday-clock span { position: absolute !important; bottom: 7px; margin: 0 !important; font-size: 7px !important; }
+    .brand-title h1 { font-size: clamp(1.08rem, 2vw, 1.42rem); letter-spacing: .17em; }
+    .brand-title h1 span { color: var(--accent-amber); text-shadow: 0 0 16px var(--accent-amber-glow); }
+    .brand-sub { color: #d7a75c; font-size: .65rem; letter-spacing: .16em; margin-top: 3px; }
+    .status-pill {
+      border-radius: 999px;
+      padding: 7px 13px;
+      background: rgba(10,14,20,.76);
+      border-color: rgba(160,174,192,.18);
+      color: #c2cad4;
+      font-size: .67rem;
+      letter-spacing: .045em;
+    }
+    .dot { box-shadow: 0 0 10px currentColor; animation: glowBreath 2.6s ease-in-out infinite; }
+
+    .container { max-width: 1480px; padding: 30px clamp(14px, 2.4vw, 34px) 90px; }
+    .command-intro {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 22px;
+      min-height: 168px;
+      margin: 2px 0 26px;
+      padding: clamp(22px, 4vw, 38px);
+      border: 1px solid rgba(244,189,99,.24);
+      border-radius: 16px;
+      background:
+        linear-gradient(100deg, rgba(8,11,16,.97) 0%, rgba(12,15,21,.89) 53%, rgba(13,16,22,.54) 100%),
+        url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1800&q=85') center 46%/cover;
+      box-shadow: 0 22px 65px rgba(0,0,0,.34), inset 0 1px rgba(255,255,255,.05);
+    }
+    .command-intro::before {
+      content: '';
+      position: absolute;
+      right: -65px; top: -125px;
+      width: 340px; height: 340px;
+      border: 1px solid rgba(244,189,99,.22);
+      border-radius: 50%;
+      box-shadow: 0 0 0 24px rgba(244,189,99,.025), 0 0 0 54px rgba(244,189,99,.02), inset 0 0 55px rgba(255,75,95,.08);
+      pointer-events: none;
+    }
+    .command-intro::after {
+      content: 'TQS  /  2026';
+      position: absolute;
+      right: 28px; bottom: 18px;
+      color: rgba(244,189,99,.5);
+      font: 600 10px var(--font-mono);
+      letter-spacing: .25em;
+    }
+    .intro-copy { position: relative; z-index: 1; max-width: 720px; }
+    .intro-kicker { color: var(--accent-amber); font: 600 .68rem var(--font-mono); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 11px; }
+    .intro-heading { color: #fff; font-size: clamp(1.55rem, 3.2vw, 2.65rem); line-height: 1.05; letter-spacing: -.045em; font-weight: 800; }
+    .intro-heading span { color: var(--accent-crimson); text-shadow: 0 0 24px rgba(255,75,95,.28); }
+    .intro-note { color: #aab4c0; font-size: .84rem; margin-top: 11px; max-width: 560px; }
+    .intro-mark { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 7px; color: rgba(244,189,99,.78); font: 600 .64rem var(--font-mono); letter-spacing: .15em; text-align: right; }
+    .intro-mark strong { color: #fff; font-size: 1.1rem; letter-spacing: .08em; }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(17,22,30,.94), rgba(10,14,20,.91));
+      border: 1px solid rgba(155,171,191,.16);
+      border-radius: 13px;
+      padding: clamp(17px, 2.4vw, 27px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.22), inset 0 1px rgba(255,255,255,.035);
+      backdrop-filter: blur(14px);
+    }
+    .panel::before { width: 2px; opacity: .8; border-radius: 13px 0 0 13px; }
+    .panel.crimson-border { border-color: rgba(255,75,95,.28); }
+    .panel-header { border-bottom-color: rgba(155,171,191,.13); padding-bottom: 15px; margin-bottom: 20px; }
+    .panel-title { color: #f1c47d; font-size: .91rem; letter-spacing: .13em; }
+    .grid-2, .grid-4 { gap: 17px; }
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(145deg, rgba(24,31,42,.96), rgba(13,18,26,.96));
+      border: 1px solid rgba(155,171,191,.15);
+      border-left: 2px solid var(--accent-crimson);
+      border-radius: 11px;
+      padding: 19px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.16);
+    }
+    .stat-card::after { content: ''; position: absolute; width: 90px; height: 90px; right: -38px; top: -42px; border: 1px solid rgba(244,189,99,.13); border-radius: 50%; box-shadow: 0 0 0 12px rgba(244,189,99,.025); }
+    .stat-label { letter-spacing: .13em; font-size: .65rem; }
+    .stat-value { font-size: clamp(1.35rem, 2vw, 1.8rem); letter-spacing: -.04em; }
+
+    button, .btn-outline, .btn-primary, .btn-amber, .btn-danger, .nav-tab, .entry-chip button, select, label.btn-outline { cursor: pointer; }
+    button { border-radius: 7px; padding: 9px 15px; letter-spacing: .065em; font-size: .75rem; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid rgba(244,189,99,.82); outline-offset: 2px; }
+    button:active { transform: translateY(1px); }
+    .btn-primary { background: linear-gradient(135deg, #ff5365, #d92f48); box-shadow: 0 7px 20px rgba(255,75,95,.18); }
+    .btn-primary:hover { background: linear-gradient(135deg, #ff6878, #eb3a53); box-shadow: 0 9px 26px rgba(255,75,95,.28); }
+    .btn-amber { background: linear-gradient(135deg, #f6ce8c, #dca14f); color: #17120b; box-shadow: 0 7px 20px rgba(244,189,99,.15); }
+    .btn-amber:hover { background: linear-gradient(135deg, #ffdda6, #e8b364); }
+    .btn-outline { background: rgba(25,32,43,.82); border-color: rgba(155,171,191,.2); color: #dce2e9; }
+    .btn-outline:hover { border-color: rgba(244,189,99,.65); color: #f4c77f; background: rgba(244,189,99,.07); }
+    .btn-danger { background: rgba(255,75,95,.09); border-color: rgba(255,75,95,.32); color: #ff9ba7; }
+    .btn-danger:hover { background: #e43b52; }
+    .btn-sm { border-radius: 6px; padding: 6px 10px; font-size: .68rem; }
+
+    .nav-tabs { gap: 8px; border-bottom: 1px solid rgba(155,171,191,.15); margin-bottom: 22px; padding-bottom: 13px; }
+    .nav-tab { border-radius: 8px; padding: 11px 15px; background: rgba(14,19,27,.82); border-color: rgba(155,171,191,.15); font-size: .68rem; letter-spacing: .08em; transition: .2s ease; }
+    .nav-tab:hover { color: #fff; border-color: rgba(244,189,99,.5); transform: translateY(-1px); }
+    .nav-tab.active { background: linear-gradient(135deg, #e94459, #a91f37); border-color: rgba(255,110,125,.7); box-shadow: 0 7px 24px rgba(255,75,95,.19); }
+
+    input, select, textarea { border-radius: 7px; border-color: rgba(155,171,191,.2); background: rgba(6,9,14,.86); padding: 11px 13px; transition: border-color .18s, box-shadow .18s, background .18s; }
+    input:hover, select:hover, textarea:hover { border-color: rgba(155,171,191,.38); }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent-amber); box-shadow: 0 0 0 3px rgba(244,189,99,.09); }
+    label { font-size: .68rem; letter-spacing: .09em; color: #aeb8c5; }
+
+    .table-wrap { border: 1px solid rgba(155,171,191,.16); border-radius: 10px; background: rgba(7,10,15,.35); }
+    table { font-size: .83rem; }
+    th { background: rgba(8,12,18,.96); color: #e8bd79; font-size: .66rem; letter-spacing: .12em; padding: 15px 16px; border-bottom-color: rgba(244,189,99,.2); }
+    td { padding: 13px 16px; border-bottom-color: rgba(155,171,191,.1); }
+    tbody tr { transition: background .18s ease; }
+    tr:hover td { background: rgba(244,189,99,.035); }
+    .badge { border-radius: 999px; font-size: .63rem; letter-spacing: .06em; padding: 5px 10px; }
+    .badge-award { background: rgba(244,189,99,.12); border-color: rgba(244,189,99,.6); color: #f5cd8b; }
+    .badge-present { background: rgba(86,214,173,.1); border-color: rgba(86,214,173,.48); color: #7ce4c0; }
+    .badge-pv { background: rgba(244,189,99,.1); border-color: rgba(244,189,99,.45); color: #f4ca86; }
+    .badge-absent { background: rgba(255,75,95,.1); border-color: rgba(255,75,95,.48); color: #ff9ba7; }
+    .entry-chip { border-radius: 999px; border-color: rgba(155,171,191,.2); background: rgba(7,10,15,.8); padding: 5px 10px; }
+    .entry-chip button { border-radius: 4px; }
+
+    .dossier-box, .feedback-block { background: linear-gradient(145deg, rgba(21,28,38,.96), rgba(10,14,20,.96)); border: 1px solid rgba(155,171,191,.16); border-radius: 10px; }
+    .dossier-box { border-top: 2px solid var(--accent-crimson); box-shadow: 0 14px 35px rgba(0,0,0,.18); }
+    .feedback-block { padding: 16px; }
+    .feedback-block h4 { color: #edc17d; letter-spacing: .1em; }
+
+    .modal-backdrop { background: rgba(2,4,7,.82); backdrop-filter: blur(13px); }
+    .modal { background: linear-gradient(145deg, #141b25, #0a0e14); border: 1px solid rgba(255,75,95,.48); border-radius: 14px; box-shadow: 0 28px 90px rgba(0,0,0,.65), 0 0 45px rgba(255,75,95,.12); }
+    #toast { border-radius: 9px; border-color: rgba(244,189,99,.55); background: rgba(15,21,29,.97); backdrop-filter: blur(14px); }
+
+    #classifiedBanner { background: linear-gradient(145deg, rgba(255,75,95,.055), rgba(8,12,18,.68)); border-color: rgba(255,75,95,.48) !important; box-shadow: inset 0 0 55px rgba(255,75,95,.035); }
+    #classifiedBanner > div:first-child { text-shadow: 0 0 20px rgba(255,75,95,.28); }
+    #selectedDossierContainerDelegate:empty { display: none; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 760px) {
+      header { align-items: flex-start; }
+      .header-actions { width: 100%; }
+      .status-pill { font-size: .6rem; }
+      .command-intro { min-height: 155px; align-items: flex-start; }
+      .intro-mark { display: none; }
+      .intro-heading { max-width: 440px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .nav-tabs { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .nav-tab { min-width: 0; padding: 10px 8px; font-size: .61rem; }
+      .panel-header { align-items: flex-start; }
+      .container { padding-top: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+
+
+    /* DOOMSDAY PROTOCOL — enhanced command-interface layer */
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'DM Mono', 'Courier New', monospace;
+      --accent-crimson: #ff5365;
+      --accent-amber: #f4bd63;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); }
+    .skip-link { position: fixed; z-index: 1000; top: 10px; left: 10px; transform: translateY(-150%); padding: 10px 14px; border-radius: 7px; background: #f4bd63; color: #111; font-weight: 800; text-decoration: none; }
+    .skip-link:focus { transform: translateY(0); }
+    .brand-title h1, .intro-heading { font-family: 'Barlow Condensed', var(--font-sans); }
+    .brand-title h1 { letter-spacing: .11em; }
+    .command-intro { min-height: 228px; }
+    .intro-heading { font-size: clamp(2.2rem, 5vw, 4.05rem); letter-spacing: .015em; text-transform: uppercase; }
+    .intro-kicker { display: inline-flex; align-items: center; gap: 9px; }
+    .intro-kicker::before { content: ''; width: 23px; height: 1px; background: var(--accent-amber); box-shadow: 0 0 9px var(--accent-amber); }
+    .intro-note { font-size: .9rem; max-width: 600px; }
+    .intro-mark { min-width: 210px; }
+    .intro-radar { width: clamp(86px, 10vw, 132px); height: auto; margin-bottom: 2px; color: #f4bd63; filter: drop-shadow(0 0 14px rgba(244,189,99,.2)); }
+    .protocol-ribbon { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)) auto; align-items: center; gap: 0; margin: -9px 0 25px; border: 1px solid rgba(155,171,191,.15); border-radius: 10px; overflow: hidden; background: linear-gradient(90deg, rgba(13,18,26,.94), rgba(9,13,19,.88)); box-shadow: 0 12px 30px rgba(0,0,0,.16); }
+    .ribbon-cell { display: flex; align-items: center; gap: 12px; min-height: 66px; padding: 12px 17px; border-right: 1px solid rgba(155,171,191,.12); }
+    .ribbon-index { color: var(--accent-crimson); font: 500 1.1rem var(--font-mono); letter-spacing: -.06em; }
+    .ribbon-cell b { display: block; color: #dce3ec; font: 600 .65rem var(--font-mono); letter-spacing: .09em; }
+    .ribbon-cell small { display: block; color: #748194; margin-top: 4px; font: 400 .56rem var(--font-mono); letter-spacing: .07em; }
+    .ribbon-status { display: flex; align-items: center; gap: 8px; padding: 0 17px; color: #a8b4c3; font: 500 .58rem var(--font-mono); letter-spacing: .08em; white-space: nowrap; }
+    .ribbon-status i, .footer-center i { width: 6px; height: 6px; display: inline-block; border-radius: 50%; background: #66d9b0; box-shadow: 0 0 10px rgba(102,217,176,.8); }
+    .panel, .stat-card, .table-wrap, .modal { transition: border-color .22s ease, box-shadow .22s ease, transform .22s ease; }
+    .stat-card:hover { transform: translateY(-2px); border-color: rgba(244,189,99,.3); box-shadow: 0 17px 34px rgba(0,0,0,.23); }
+    .panel-title { font-family: var(--font-mono); }
+    .nav-tab { position: relative; overflow: hidden; }
+    .nav-tab.active::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 1px; background: rgba(255,255,255,.58); }
+    .tab-pane:not(.hidden) { animation: paneReveal .24s ease both; }
+    @keyframes paneReveal { from { opacity: .35; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    .table-wrap { box-shadow: inset 0 1px rgba(255,255,255,.025); }
+    table { font-variant-numeric: tabular-nums; }
+    tbody tr:last-child td { border-bottom: 0; }
+    input::placeholder, textarea::placeholder { color: #637083; }
+    select { color-scheme: dark; }
+    .portal-footer { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 17px clamp(16px, 3vw, 42px); border-top: 1px solid rgba(244,189,99,.14); background: rgba(5,8,12,.84); color: #687586; font: 500 .58rem var(--font-mono); letter-spacing: .12em; }
+    .portal-footer > div { display: flex; align-items: center; gap: 10px; color: #b8c1cd; }
+    .footer-mark { color: var(--accent-amber); font-weight: 700; }
+    .footer-center { display: flex; align-items: center; gap: 9px; }
+    .footer-right { color: rgba(255,83,101,.78); }
+    .back-to-top { position: fixed; right: 22px; bottom: 22px; z-index: 70; width: 42px; height: 42px; padding: 0; border: 1px solid rgba(244,189,99,.35); border-radius: 50%; background: rgba(13,18,26,.92); color: var(--accent-amber); font-size: 1.2rem; box-shadow: 0 8px 24px rgba(0,0,0,.35); opacity: 0; visibility: hidden; transform: translateY(8px); transition: .2s ease; }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background: rgba(244,189,99,.14); border-color: var(--accent-amber); }
+    :focus-visible { scroll-margin-top: 100px; }
+    @media (max-width: 900px) {
+      .protocol-ribbon { grid-template-columns: repeat(3, minmax(0,1fr)); }
+      .ribbon-status { grid-column: 1 / -1; justify-content: flex-end; min-height: 34px; border-top: 1px solid rgba(155,171,191,.12); }
+    }
+    @media (max-width: 760px) {
+      .command-intro { min-height: 185px; }
+      .protocol-ribbon { grid-template-columns: 1fr; }
+      .ribbon-cell { min-height: 54px; border-right: 0; border-bottom: 1px solid rgba(155,171,191,.1); }
+      .ribbon-status { grid-column: auto; }
+      .portal-footer { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .footer-center { flex-wrap: wrap; }
+      .back-to-top { right: 14px; bottom: 14px; }
+      .header-actions { gap: 8px; }
+      .header-actions .status-pill { max-width: 100%; }
+    }
+    @media (max-width: 420px) {
+      .brand { align-items: flex-start; }
+      .doomsday-clock { width: 44px; height: 44px; flex: 0 0 44px; }
+      .brand-sub { max-width: 230px; line-height: 1.55; }
+      .intro-heading { font-size: 2.15rem; }
+      .nav-tabs { grid-template-columns: 1fr 1fr; }
+      .nav-tab { min-height: 48px; line-height: 1.35; }
+    }
+
+  
+/* ===== TQSMUN 2026 // HOLOGRAPHIC DOOMSDAY PASS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800&display=swap');
+:root{--font-sans:'Space Grotesk',sans-serif;--font-mono:'DM Mono',monospace;--holo-cyan:#6ee7f9;--holo-violet:#b7a2ff;--holo-blue:#72a7ff;--script:'Cormorant Garamond',serif}
+body{font-family:var(--font-sans);background-color:#03050b;background-image:linear-gradient(180deg,rgba(3,5,11,.76),rgba(3,5,11,.94)),url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=2400&q=90'),radial-gradient(ellipse at 50% 0%,rgba(83,115,255,.22),transparent 52%);background-size:cover;background-position:center;background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.24;background-image:linear-gradient(rgba(110,231,249,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(110,231,249,.045) 1px,transparent 1px);background-size:54px 54px;mask-image:linear-gradient(to bottom,black,transparent 85%)}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 14% 22%,rgba(110,231,249,.12),transparent 17%),radial-gradient(circle at 84% 34%,rgba(183,162,255,.10),transparent 20%),linear-gradient(115deg,transparent 48%,rgba(110,231,249,.025) 49%,transparent 50%);mix-blend-mode:screen}
+header,main,footer,.modal-backdrop,#toast,.back-to-top{position:relative;z-index:1}
+.command-intro{position:relative;overflow:hidden;border:1px solid rgba(110,231,249,.25)!important;background:linear-gradient(120deg,rgba(9,17,34,.94),rgba(17,14,36,.78))!important;box-shadow:0 24px 90px rgba(0,0,0,.35),inset 0 0 50px rgba(110,231,249,.055)!important}
+.command-intro:before{content:"";position:absolute;width:330px;height:330px;right:4%;top:-105px;border:1px solid rgba(110,231,249,.25);border-radius:50%;box-shadow:0 0 0 24px rgba(110,231,249,.025),0 0 0 55px rgba(110,231,249,.018),inset 0 0 42px rgba(110,231,249,.09);background:repeating-conic-gradient(from 0deg,transparent 0deg 13deg,rgba(110,231,249,.12) 13.3deg 13.7deg,transparent 14deg 30deg);opacity:.62;pointer-events:none}
+.command-intro:after{content:"TQ / 26   •   GLOBAL WATCH   •   SIGNAL 07";position:absolute;right:24px;bottom:16px;color:rgba(110,231,249,.35);font:9px var(--font-mono);letter-spacing:2px}
+.intro-radar{color:var(--holo-cyan)!important;filter:drop-shadow(0 0 22px rgba(110,231,249,.32))!important;animation:sentinelFloat 9s ease-in-out infinite}
+@keyframes sentinelFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+.intro-heading{font-family:'Orbitron',sans-serif!important;letter-spacing:.055em!important;text-shadow:0 0 24px rgba(110,231,249,.22)}
+.intro-heading span{background:linear-gradient(100deg,#ff526f,#ffbf70,#7be7f6);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+.intro-note{font-family:var(--script)!important;font-style:italic!important;font-size:1.28rem!important;letter-spacing:.025em;color:#b9dce8!important}
+.panel,.stat-card,.modal,.delegate-card,.score-card{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-color:rgba(143,184,218,.16)!important;box-shadow:0 14px 45px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.035)}
+.panel-header,.nav-tab.active{border-color:rgba(110,231,249,.28)!important}
+.panel-title,.stat-label,.section-kicker{letter-spacing:.12em}
+button,.btn-primary,.btn-outline,.btn-danger,.nav-tab{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease;cursor:pointer}
+button:hover,.btn-primary:hover,.btn-outline:hover,.btn-danger:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.28)}
+input,select,textarea{cursor:text}select{cursor:pointer}
+*:focus-visible{outline:2px solid var(--holo-cyan)!important;outline-offset:3px}
+/* Fine-grain ambient decoration */
+.panel:after{content:"";position:absolute;pointer-events:none;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(110,231,249,.035),transparent 28%,transparent 72%,rgba(183,162,255,.025));opacity:.8}
+.portal-footer{border-top:1px solid rgba(110,231,249,.16)!important}
+.footer-mark{font-family:'Orbitron',sans-serif!important;color:var(--holo-cyan)!important;text-shadow:0 0 14px rgba(110,231,249,.4)}
+/* Individual Watcher authentication */
+.watcher-auth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0 18px}
+.watcher-auth-card{position:relative;text-align:left;padding:15px;border:1px solid rgba(110,231,249,.18);border-radius:13px;background:linear-gradient(135deg,rgba(18,32,53,.92),rgba(19,18,39,.88));color:#eef8ff;min-height:86px;overflow:hidden}
+.watcher-auth-card:after{content:"";position:absolute;right:-20px;top:-26px;width:82px;height:82px;border:1px solid rgba(110,231,249,.2);border-radius:50%;box-shadow:0 0 0 10px rgba(110,231,249,.025),0 0 22px rgba(110,231,249,.08)}
+.watcher-auth-card.selected{border-color:var(--holo-cyan);background:linear-gradient(135deg,rgba(20,66,82,.85),rgba(30,28,65,.92));box-shadow:0 0 0 1px rgba(110,231,249,.18),0 0 24px rgba(110,231,249,.13)}
+.watcher-auth-card strong{display:block;font:600 .8rem 'Orbitron',sans-serif;letter-spacing:.06em;color:var(--holo-cyan)}
+.watcher-auth-card span{display:block;margin-top:7px;color:#d6e3ef;font-size:.92rem}
+.auth-script{font:italic 1.45rem var(--script);color:#b9e8f0;letter-spacing:.03em}
+.auth-hint{font-size:.75rem;color:#91a5ba;line-height:1.55;margin-top:10px}
+.credential-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border:1px solid rgba(110,231,249,.12);border-radius:10px;background:rgba(7,14,27,.55);margin:8px 0}
+.credential-row small{color:#93a8bb}
+@media(max-width:620px){.watcher-auth-grid{grid-template-columns:1fr}.command-intro:before{right:-180px;opacity:.35}}
+
+</style>
+
+<style id="tqsmun-hypercore">
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&display=swap');
+:root{--font-sans:'Space Grotesk',system-ui,sans-serif;--font-mono:'DM Mono',ui-monospace,monospace;--h-cyan:#75f7ff;--h-blue:#66a7ff;--h-violet:#a68bff;--h-pink:#ff668c;--h-amber:#ffc46e;--h-panel:rgba(8,15,28,.84);--h-line:rgba(112,220,255,.18);--h-text:#f3f8ff;--h-muted:#9fb2c9;--script:'Cormorant Garamond',serif}
+html{scroll-behavior:smooth;background:#030611}
+body{position:relative;isolation:isolate;overflow-x:hidden;color:var(--h-text);font-family:var(--font-sans);background:#030611;background-image:linear-gradient(180deg,rgba(2,5,14,.77),rgba(3,5,15,.93) 62%,#03050b),url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=90');background-size:cover;background-position:center top;background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.20;background-image:linear-gradient(rgba(101,221,255,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(101,221,255,.075) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 88%)}
+body:after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(ellipse at 12% 14%,rgba(47,176,255,.17),transparent 33%),radial-gradient(ellipse at 87% 18%,rgba(158,90,255,.16),transparent 34%),radial-gradient(ellipse at 50% 96%,rgba(255,67,119,.07),transparent 42%);mix-blend-mode:screen}
+.ambient-scene{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:strict}.ambient-grid{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 34%,rgba(1,3,10,.34) 100%)}.ambient-scan{position:absolute;left:0;right:0;top:-30%;height:24%;background:linear-gradient(180deg,transparent,rgba(105,238,255,.055),transparent);filter:blur(9px);animation:hyperScan 13s linear infinite}.ambient-orb{position:absolute;border:1px solid rgba(109,226,255,.12);border-radius:50%;box-shadow:0 0 80px rgba(78,197,255,.08),inset 0 0 60px rgba(78,197,255,.035)}.ambient-orb-one{width:56vw;height:56vw;min-width:480px;min-height:480px;right:-22vw;top:11vh;animation:orbDrift 34s ease-in-out infinite}.ambient-orb-two{width:28vw;height:28vw;min-width:260px;min-height:260px;left:-15vw;bottom:-15vh;border-color:rgba(184,128,255,.12);animation:orbDrift 28s ease-in-out infinite reverse}.ambient-guardian{position:absolute;width:min(42vw,620px);height:auto;right:-4vw;bottom:-22vh;opacity:.10;mix-blend-mode:screen;filter:drop-shadow(0 0 24px rgba(98,221,255,.35));animation:guardianFloat 10s ease-in-out infinite}.container,header,footer{position:relative;z-index:2}.modal-backdrop{position:fixed!important;inset:0!important;z-index:10000!important;pointer-events:auto!important}.modal-backdrop.open{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}.auth-backdrop{align-items:center!important;justify-content:center!important}.auth-shell,.auth-shell *{pointer-events:auto}#toast{position:fixed!important;z-index:1100!important}.back-to-top{position:fixed!important;z-index:80!important}
+@keyframes hyperScan{0%{transform:translateY(-20vh)}100%{transform:translateY(150vh)}}@keyframes orbDrift{0%,100%{transform:translate3d(0,0,0) rotate(0)}50%{transform:translate3d(1.5vw,-2vh,0) rotate(12deg)}}@keyframes guardianFloat{0%,100%{transform:translateY(0) rotate(-1deg);opacity:.08}50%{transform:translateY(-18px) rotate(1deg);opacity:.15}}
+/* Cinematic chrome */
+header{position:sticky!important;top:0;z-index:100!important;min-height:84px;padding:14px clamp(16px,3vw,42px)!important;background:linear-gradient(90deg,rgba(5,12,25,.94),rgba(12,10,29,.88),rgba(5,12,25,.94))!important;border-bottom:1px solid rgba(112,220,255,.22)!important;box-shadow:0 12px 50px rgba(0,0,0,.32),inset 0 -1px rgba(255,255,255,.035)!important;backdrop-filter:blur(22px) saturate(150%)!important}
+header:after{content:"";position:absolute;left:3%;right:3%;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--h-cyan),var(--h-violet),var(--h-pink),transparent);opacity:.55;pointer-events:none}.brand{gap:18px}.doomsday-clock{position:relative;width:62px!important;height:62px!important;border:1px solid rgba(111,244,255,.68)!important;background:radial-gradient(circle,rgba(83,218,255,.16),rgba(8,17,34,.92) 65%)!important;color:var(--h-cyan)!important;box-shadow:0 0 22px rgba(79,221,255,.22),inset 0 0 18px rgba(79,221,255,.13)!important;animation:clockPulse 4s ease-in-out infinite!important}.doomsday-clock:before,.doomsday-clock:after{content:"";position:absolute;inset:-7px;border:1px dashed rgba(117,247,255,.38);border-radius:50%;animation:clockOrbit 18s linear infinite}.doomsday-clock:after{inset:-13px;border-color:rgba(166,139,255,.22);animation-direction:reverse;animation-duration:30s}.brand-title h1{font:800 clamp(1.08rem,2.1vw,1.48rem) 'Orbitron',sans-serif!important;letter-spacing:.16em!important;text-shadow:0 0 22px rgba(92,217,255,.17)}.brand-title h1 span{background:linear-gradient(90deg,#72f5ff,#a995ff,#ff779b);color:transparent!important;background-clip:text;text-shadow:none!important}.brand-sub{font:500 .59rem var(--font-mono)!important;color:#9fc9db!important;letter-spacing:.17em!important}.header-actions{gap:10px!important}.status-pill{border:1px solid rgba(117,247,255,.16)!important;background:rgba(6,13,26,.62)!important;color:#b8cadf!important;backdrop-filter:blur(10px);box-shadow:inset 0 0 20px rgba(88,187,255,.035)}.status-pill .dot{box-shadow:0 0 12px currentColor}.btn-primary,.btn-amber,.btn-outline,.btn-danger{font-family:var(--font-mono)!important;letter-spacing:.075em!important;border-radius:7px!important}.btn-primary{background:linear-gradient(110deg,#11cde2,#5877ff 54%,#9c70ff)!important;border:1px solid rgba(151,247,255,.7)!important;color:#041018!important;font-weight:800!important;box-shadow:0 7px 26px rgba(41,194,255,.21),inset 0 1px rgba(255,255,255,.55)!important}.btn-primary:hover{filter:brightness(1.13);box-shadow:0 10px 32px rgba(68,214,255,.33)!important}.btn-outline{border:1px solid rgba(117,224,255,.25)!important;background:rgba(7,16,31,.72)!important;color:#c8eaf5!important}.btn-outline:hover{border-color:rgba(117,247,255,.65)!important;background:rgba(74,193,225,.1)!important;color:#fff!important}.btn-amber{background:linear-gradient(110deg,#ffc56f,#ff8b65)!important;color:#1c0d14!important}
+.container{max-width:1600px!important;padding:clamp(18px,3vw,38px) clamp(13px,2.7vw,42px) 100px!important}.command-intro{position:relative;isolation:isolate;min-height:270px!important;align-items:center!important;border:1px solid rgba(108,221,255,.30)!important;border-radius:18px!important;padding:clamp(28px,5vw,60px)!important;margin:0 0 18px!important;overflow:hidden!important;background:linear-gradient(90deg,rgba(4,10,24,.97) 0%,rgba(5,13,31,.88) 45%,rgba(12,11,35,.4) 100%),url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=2200&q=90') center 47%/cover!important;box-shadow:0 28px 90px rgba(0,0,0,.43),inset 0 0 70px rgba(72,196,255,.075)!important}.command-intro:before{content:"";position:absolute;z-index:-1;right:6%;top:-42%;width:min(38vw,440px);height:min(38vw,440px);border-radius:50%;border:1px solid rgba(110,241,255,.38);background:repeating-conic-gradient(from 0deg,transparent 0deg 9deg,rgba(99,230,255,.14) 9.3deg 9.8deg,transparent 10deg 18deg),radial-gradient(circle,rgba(94,198,255,.10),transparent 65%);box-shadow:0 0 0 20px rgba(111,226,255,.025),0 0 0 48px rgba(111,226,255,.018),0 0 85px rgba(84,195,255,.18),inset 0 0 45px rgba(84,195,255,.18);animation:clockOrbit 60s linear infinite;pointer-events:none}.command-intro:after{content:"EARTH SYSTEMS / LIVE MONITORING     ◈     TQS-2026";right:24px!important;bottom:18px!important;color:rgba(141,237,255,.55)!important;font:9px var(--font-mono)!important;letter-spacing:2px}.intro-copy{max-width:820px!important}.intro-kicker{font:600 .67rem var(--font-mono)!important;color:#7deeff!important;letter-spacing:.22em!important}.intro-heading{font:800 clamp(2.15rem,5.5vw,4.7rem)/.98 'Orbitron',sans-serif!important;letter-spacing:.03em!important;text-shadow:0 0 34px rgba(89,206,255,.18)!important}.intro-heading span{background:linear-gradient(95deg,#ff7395,#ffbd83,#72f6ff,#a997ff);background-clip:text!important;color:transparent!important;text-shadow:none!important}.intro-note{font:italic 1.38rem var(--script)!important;color:#c5dfea!important;letter-spacing:.02em!important;max-width:650px!important}.intro-mark{min-width:190px}.intro-radar{width:clamp(145px,17vw,220px)!important;filter:drop-shadow(0 0 28px rgba(110,230,255,.48))!important}.intro-mark strong{font:700 .7rem var(--font-mono)!important;color:#8ff5ff!important;letter-spacing:.18em!important}.intro-mark span{font:9px var(--font-mono)!important;color:#b3c9e6!important;letter-spacing:.1em!important}
+.protocol-ribbon{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr)) auto!important;gap:0!important;margin:0 0 25px!important;border:1px solid rgba(117,226,255,.16)!important;border-radius:13px!important;background:linear-gradient(90deg,rgba(7,15,31,.88),rgba(17,12,35,.88))!important;box-shadow:0 15px 45px rgba(0,0,0,.2),inset 0 0 35px rgba(100,210,255,.025)!important;overflow:hidden}.ribbon-cell{padding:14px 18px!important;border-right:1px solid rgba(117,226,255,.11)!important}.ribbon-index{font:700 .64rem 'Orbitron',sans-serif!important;color:var(--h-cyan)!important;text-shadow:0 0 12px rgba(117,247,255,.5)}.ribbon-cell b{font:600 .64rem var(--font-mono)!important;color:#e6f7ff!important;letter-spacing:.1em}.ribbon-cell small{font:9px var(--font-mono)!important;color:#809bb4!important;letter-spacing:.08em}.ribbon-status{padding:14px 18px!important;color:#92bdca!important;font:9px var(--font-mono)!important;letter-spacing:.13em!important}.ribbon-status i{background:var(--h-cyan)!important;box-shadow:0 0 12px var(--h-cyan)!important}
+.panel,.stat-card,.delegate-card,.score-card,.table-wrap{position:relative;isolation:isolate;border:1px solid rgba(117,217,255,.16)!important;border-radius:14px!important;background:linear-gradient(145deg,rgba(11,21,39,.88),rgba(6,11,23,.88))!important;box-shadow:0 16px 55px rgba(0,0,0,.27),inset 0 1px rgba(255,255,255,.045)!important;backdrop-filter:blur(18px) saturate(140%)!important}.panel:after{content:"";position:absolute;inset:0;border-radius:inherit;z-index:-1;pointer-events:none;background:linear-gradient(130deg,rgba(99,236,255,.04),transparent 27%,transparent 74%,rgba(170,130,255,.035))}.panel-header{border-bottom:1px solid rgba(117,226,255,.14)!important}.panel-title,.stat-label{font:600 .67rem var(--font-mono)!important;letter-spacing:.15em!important;color:#9deeff!important}.stat-card{overflow:hidden!important;padding:22px!important}.stat-card:after{content:"";position:absolute;right:-30px;top:-38px;width:115px;height:115px;border-radius:50%;border:1px solid rgba(112,220,255,.2);box-shadow:0 0 0 15px rgba(112,220,255,.025),0 0 34px rgba(112,220,255,.08)}.stat-value{font:700 clamp(1.5rem,2.5vw,2.15rem) 'Orbitron',sans-serif!important;color:#f1fbff!important;text-shadow:0 0 18px rgba(106,227,255,.13)}.nav-tabs{gap:9px!important;border-bottom:1px solid rgba(117,226,255,.14)!important}.nav-tab{border:1px solid rgba(117,226,255,.15)!important;border-radius:9px!important;background:rgba(7,15,31,.85)!important;color:#9fb8ce!important;font:500 .62rem var(--font-mono)!important;letter-spacing:.07em!important}.nav-tab.active{background:linear-gradient(110deg,rgba(23,174,198,.28),rgba(103,91,214,.28))!important;border-color:rgba(117,247,255,.55)!important;color:#f3fdff!important;box-shadow:0 0 24px rgba(73,207,244,.12),inset 0 0 20px rgba(117,247,255,.06)!important}.nav-tab:hover{border-color:rgba(117,247,255,.42)!important;color:#fff!important}input,select,textarea{background:rgba(3,9,20,.8)!important;border:1px solid rgba(117,226,255,.19)!important;border-radius:8px!important;color:#edf9ff!important}input:focus,select:focus,textarea:focus{border-color:var(--h-cyan)!important;box-shadow:0 0 0 3px rgba(117,247,255,.10),0 0 20px rgba(117,247,255,.08)!important}label{color:#9bb4cc!important;font:500 .62rem var(--font-mono)!important;letter-spacing:.09em!important}th{background:rgba(4,11,23,.98)!important;color:#8eeeff!important;font:600 .62rem var(--font-mono)!important;letter-spacing:.12em!important}td{border-bottom-color:rgba(117,226,255,.09)!important}tbody tr:hover td{background:rgba(80,212,255,.045)!important}.table-wrap{overflow:auto}.badge{font-family:var(--font-mono)!important}.portal-footer{position:relative!important;z-index:2!important;border-top:1px solid rgba(117,226,255,.16)!important;background:rgba(3,8,18,.78)!important;color:#718da9!important;backdrop-filter:blur(12px)}.footer-mark{font:700 .8rem 'Orbitron',sans-serif!important;color:var(--h-cyan)!important;text-shadow:0 0 16px rgba(117,247,255,.5)}
+/* Full-screen cinematic Watcher login */
+.auth-backdrop{display:none!important;align-items:center!important;justify-content:center!important;padding:clamp(10px,2vw,28px)!important;background:radial-gradient(ellipse at 20% 30%,rgba(33,121,170,.22),transparent 40%),radial-gradient(ellipse at 84% 72%,rgba(142,63,193,.20),transparent 40%),rgba(1,3,10,.88)!important;backdrop-filter:blur(22px) saturate(130%)!important;overflow-y:auto!important}.auth-backdrop.open{display:flex!important}.auth-shell{position:relative;display:grid;grid-template-columns:minmax(320px,.92fr) minmax(420px,1.08fr);width:min(1180px,100%);min-height:min(740px,calc(100vh - 40px));max-height:calc(100vh - 36px);border:1px solid rgba(116,238,255,.34);border-radius:22px;overflow:hidden;background:linear-gradient(120deg,rgba(5,17,36,.97),rgba(7,10,25,.98));box-shadow:0 40px 140px rgba(0,0,0,.72),0 0 80px rgba(69,204,255,.12),inset 0 1px rgba(255,255,255,.08)}.auth-shell:before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(125deg,rgba(117,247,255,.08),transparent 30%,transparent 75%,rgba(182,132,255,.07));z-index:1}.auth-visual{position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:0;padding:28px 30px;background:linear-gradient(180deg,rgba(3,12,27,.58),rgba(5,12,31,.91)),url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1200&q=85') center/cover;border-right:1px solid rgba(117,226,255,.18);overflow:hidden}.auth-visual:after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,transparent 0 3px,rgba(116,238,255,.023) 4px),linear-gradient(90deg,rgba(104,233,255,.07),transparent 45%,rgba(171,127,255,.08))}.auth-visual-top,.auth-visual-footer{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#9cbed0;font:9px var(--font-mono);letter-spacing:.15em}.auth-visual-top span:last-child{color:#7deeff}.signal-light{display:inline-block;width:7px;height:7px;border-radius:50%;background:#63f6dc;box-shadow:0 0 13px #63f6dc;animation:clockPulse 2s ease infinite}.auth-orbit-wrap{position:absolute;left:50%;top:47%;width:min(88%,470px);aspect-ratio:1;transform:translate(-50%,-50%);display:grid;place-items:center}.auth-orbit{position:absolute;border:1px solid rgba(110,231,249,.26);border-radius:50%;box-shadow:0 0 26px rgba(83,207,255,.08),inset 0 0 30px rgba(83,207,255,.025)}.orbit-a{inset:4%;border-style:dashed;animation:clockOrbit 45s linear infinite}.orbit-b{inset:14%;transform:rotateX(65deg) rotateZ(20deg);border-color:rgba(178,145,255,.38);animation:clockOrbit 29s linear infinite reverse}.orbit-c{inset:22%;transform:rotateY(68deg) rotateZ(-35deg);border-color:rgba(255,108,153,.25);animation:clockOrbit 38s linear infinite}.auth-core{position:absolute;width:24%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(123,243,255,.24),rgba(118,115,255,.07) 48%,transparent 70%);box-shadow:0 0 65px rgba(87,202,255,.23)}.auth-avatar{position:relative;z-index:2;width:78%;height:90%;filter:drop-shadow(0 0 18px rgba(93,224,255,.34));animation:guardianFloat 8s ease-in-out infinite}.auth-crosshair{position:absolute;width:16px;height:16px;border:1px solid rgba(125,239,255,.7)}.crosshair-one{left:6%;top:25%;border-right:0;border-bottom:0}.crosshair-two{right:7%;bottom:21%;border-left:0;border-top:0}.auth-visual-copy{position:relative;z-index:3;margin-top:auto;padding:0 0 20px}.auth-overline{color:#78eeff;font:500 9px var(--font-mono);letter-spacing:.19em}.auth-visual-copy h2{margin:12px 0 10px;font:800 clamp(1.8rem,3.6vw,3.1rem)/1.02 'Orbitron',sans-serif;letter-spacing:.025em;color:#f2fbff;text-shadow:0 0 22px rgba(95,221,255,.16)}.auth-visual-copy h2 em{font-style:normal;background:linear-gradient(90deg,#77f4ff,#9b8aff,#ff789f);background-clip:text;color:transparent}.auth-visual-copy p{color:#aec7da;font:italic 1.35rem var(--script)}.auth-console{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow-y:auto;padding:clamp(24px,4vw,54px);background:radial-gradient(ellipse at 100% 0%,rgba(106,110,255,.10),transparent 42%),linear-gradient(145deg,rgba(9,18,36,.98),rgba(6,10,24,.99))}.auth-console-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.auth-brand-mark{font:800 1.05rem 'Orbitron',sans-serif;letter-spacing:.12em;color:#ebfbff}.auth-brand-mark span{color:var(--h-cyan);text-shadow:0 0 15px var(--h-cyan)}.auth-close{width:38px;height:38px;border:1px solid rgba(120,222,255,.20);border-radius:50%;background:rgba(9,20,38,.65);color:#b4d8e7;font-size:1.4rem;cursor:pointer}.auth-kicker{display:flex;align-items:center;gap:9px;color:#77eafa;font:600 9px var(--font-mono);letter-spacing:.15em}.auth-console h2{margin:13px 0 8px;font:700 clamp(1.5rem,3vw,2.15rem) 'Orbitron',sans-serif;letter-spacing:-.02em;color:#f4fbff}.auth-console h2 em{font-family:var(--script);font-size:1.32em;font-weight:600;color:#88f0fc;text-shadow:0 0 18px rgba(119,244,255,.25)}.auth-description{color:#9cb2ca;font-size:.82rem;line-height:1.6;max-width:480px;margin-bottom:18px}.watcher-auth-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0 0 20px}.watcher-auth-card{position:relative;min-height:112px;overflow:hidden;text-align:left;padding:14px 15px 12px!important;border:1px solid rgba(110,216,255,.18)!important;border-radius:11px!important;background:linear-gradient(140deg,rgba(14,32,56,.88),rgba(12,13,34,.92))!important;color:#f2fbff!important;box-shadow:inset 0 1px rgba(255,255,255,.04)!important;transition:transform .2s,border-color .2s,box-shadow .2s!important}.watcher-auth-card:before{content:"";position:absolute;right:-30px;bottom:-48px;width:106px;height:106px;border:1px solid rgba(104,225,255,.17);border-radius:50%;box-shadow:0 0 0 11px rgba(104,225,255,.025),0 0 30px rgba(104,225,255,.08)}.watcher-auth-card:hover{transform:translateY(-2px)!important;border-color:rgba(111,242,255,.48)!important;box-shadow:0 10px 30px rgba(0,0,0,.24),0 0 24px rgba(76,205,255,.10)!important}.watcher-auth-card.selected{border-color:#75f7ff!important;background:linear-gradient(135deg,rgba(19,78,95,.82),rgba(31,27,77,.93))!important;box-shadow:0 0 0 1px rgba(117,247,255,.18),0 0 26px rgba(73,212,255,.17),inset 0 0 28px rgba(105,232,255,.06)!important}.watcher-auth-card strong{display:block;position:relative;margin-top:8px;color:#90efff;font:700 .7rem 'Orbitron',sans-serif;letter-spacing:.08em}.watcher-card-index{position:absolute;top:10px;left:14px;color:#577b99;font:600 8px var(--font-mono);letter-spacing:.12em}.watcher-card-orbit{position:absolute;top:8px;right:14px;color:rgba(126,235,255,.68);font-size:17px}.watcher-card-name{display:block!important;margin-top:5px;color:#edf8ff!important;font:500 .9rem var(--font-sans)!important}.watcher-auth-card small{display:block;margin-top:8px;color:#7f9bb5;font:8px var(--font-mono);letter-spacing:.09em}.auth-selected-label{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px;color:#e8faff;font:600 .67rem var(--font-mono);letter-spacing:.08em}.auth-selected-label span{color:#6d8ba6;font-size:8px}.auth-field-wrap{margin:0 0 13px}.auth-field-wrap label{display:block;margin-bottom:7px;color:#8bb5ca!important;font:600 8px var(--font-mono)!important;letter-spacing:.16em!important}.auth-input-shell{position:relative;display:flex;align-items:center}.auth-input-shell input{width:100%;height:47px;padding:12px 48px 12px 14px!important;border-radius:8px!important;background:rgba(3,10,24,.88)!important;border-color:rgba(110,220,255,.2)!important;color:#f1fbff!important;font:500 .83rem var(--font-sans)!important}.auth-input-shell input::placeholder{color:#55718b}.password-toggle{position:absolute;right:8px;width:32px;height:32px;padding:0!important;border:0!important;background:transparent!important;color:#76bed2!important;font-size:15px!important}.password-toggle.is-visible{color:#85f5ff!important;text-shadow:0 0 12px #75f7ff}.auth-setup-fields{padding:13px;border:1px solid rgba(103,241,255,.17);border-radius:10px;background:rgba(31,104,121,.075);margin:6px 0 13px}.auth-setup-notice{display:flex;gap:10px;align-items:flex-start;margin-bottom:13px}.auth-setup-notice>span{color:#7af2ff;font-size:18px}.auth-setup-notice strong{display:block;color:#91f3ff;font:700 9px var(--font-mono);letter-spacing:.12em}.auth-setup-notice small{display:block;color:#9bb7ca;font-size:.74rem;margin-top:4px;line-height:1.4}.auth-feedback{min-height:35px;padding:9px 11px;border:1px solid rgba(111,205,255,.13);border-radius:8px;background:rgba(4,12,25,.66);color:#91b5cc;font:500 .69rem var(--font-mono);line-height:1.45;margin:8px 0 12px}.auth-feedback[data-tone="error"]{border-color:rgba(255,101,135,.35);color:#ff9eb3;background:rgba(77,16,37,.22)}.auth-feedback[data-tone="success"]{border-color:rgba(97,242,210,.35);color:#8af4d9;background:rgba(15,76,72,.18)}.auth-submit{display:flex;align-items:center;justify-content:space-between;width:100%;padding:15px 17px!important;border:1px solid rgba(134,250,255,.65)!important;border-radius:9px!important;background:linear-gradient(105deg,#25d6de,#6b8bff 57%,#a174ff)!important;color:#06111b!important;font:800 .68rem var(--font-mono)!important;letter-spacing:.15em!important;box-shadow:0 10px 32px rgba(57,192,255,.18),inset 0 1px rgba(255,255,255,.55)!important;cursor:pointer}.auth-submit b{font-size:19px}.auth-submit:disabled{opacity:.35;cursor:not-allowed;filter:saturate(.45)}.auth-console-foot{display:flex;justify-content:space-between;gap:8px;margin-top:20px;padding-top:12px;border-top:1px solid rgba(110,216,255,.12);color:#67859d;font:8px var(--font-mono);letter-spacing:.1em}.auth-hint{color:#718ba4!important;font-size:.66rem!important;line-height:1.5!important;margin-top:12px!important}
+.auth-recovery-btn{display:block;width:100%;margin-top:10px;padding:9px 10px;border:1px solid rgba(255,190,111,.24);border-radius:7px;background:rgba(255,190,111,.045);color:#d8b989;font:600 8px var(--font-mono);letter-spacing:.1em;cursor:pointer;transition:all .18s}.auth-recovery-btn:hover{border-color:rgba(255,190,111,.62);color:#ffe1b2;background:rgba(255,190,111,.09)}
+@keyframes clockPulse{0%,100%{filter:brightness(.9);box-shadow:0 0 16px rgba(80,214,255,.16),inset 0 0 14px rgba(80,214,255,.1)}50%{filter:brightness(1.25);box-shadow:0 0 30px rgba(80,214,255,.34),inset 0 0 20px rgba(80,214,255,.18)}}@keyframes clockOrbit{to{transform:rotate(360deg)}}
+button,a,select,label.btn-outline{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--h-cyan)!important;outline-offset:3px!important}::selection{background:rgba(100,225,255,.3);color:#fff}
+@media(max-width:900px){.auth-shell{grid-template-columns:minmax(230px,.72fr) minmax(380px,1.28fr)}.auth-visual{padding:22px}.auth-console{padding:26px}.auth-orbit-wrap{width:105%}.intro-mark{opacity:.8}.ambient-guardian{right:-17vw;width:58vw}}
+@media(max-width:700px){header{align-items:flex-start!important}.header-actions{width:100%;justify-content:flex-start!important;flex-wrap:wrap}.brand-sub{max-width:68vw;line-height:1.4}.command-intro{min-height:230px!important}.intro-mark{display:none!important}.command-intro:before{width:260px;height:260px;right:-90px;top:-8%}.protocol-ribbon{grid-template-columns:1fr!important}.ribbon-cell{border-right:0!important;border-bottom:1px solid rgba(117,226,255,.10)!important}.ribbon-status{display:none}.ambient-guardian{width:80vw;right:-32vw;opacity:.07}.auth-backdrop{align-items:flex-start!important;padding:8px!important}.auth-shell{display:block;width:100%;max-height:none;min-height:0;margin:8px 0;border-radius:16px}.auth-visual{min-height:250px;padding:18px 20px;border-right:0;border-bottom:1px solid rgba(117,226,255,.16)}.auth-orbit-wrap{left:auto;right:-2%;top:47%;width:220px;transform:translateY(-50%);opacity:.7}.auth-avatar{width:76%}.auth-visual-copy{max-width:56%;padding:18px 0 6px}.auth-visual-copy h2{font-size:1.45rem}.auth-visual-copy p{font-size:1.1rem}.auth-console{overflow:visible;padding:22px 18px 28px}.auth-console-head{margin-bottom:18px}.watcher-auth-grid{gap:8px}.watcher-auth-card{min-height:102px;padding:12px!important}.auth-visual-footer{font-size:7px}.auth-visual-top{font-size:8px}}
+@media(max-width:420px){.watcher-auth-grid{grid-template-columns:1fr}.watcher-auth-card{min-height:88px}.auth-visual{min-height:220px}.auth-visual-copy{max-width:68%}.auth-visual-copy h2{font-size:1.25rem}.auth-orbit-wrap{right:-16%;width:190px}}
+@media(prefers-reduced-motion:reduce){.ambient-scan,.ambient-orb,.ambient-guardian,.auth-orbit,.auth-avatar,.doomsday-clock:before,.doomsday-clock:after{animation:none!important}*,*:before,*:after{scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+
+</head>
+<body>
+  <div class="ambient-scene" aria-hidden="true">
+    <div class="ambient-grid"></div>
+    <div class="ambient-scan"></div>
+    <div class="ambient-orb ambient-orb-one"></div>
+    <div class="ambient-orb ambient-orb-two"></div>
+    <svg class="ambient-guardian" viewBox="0 0 520 760" role="presentation" aria-hidden="true">
+      <defs>
+        <linearGradient id="guardianStroke" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#55f4ff"/><stop offset=".48" stop-color="#8d82ff"/><stop offset="1" stop-color="#ff587f"/></linearGradient>
+        <linearGradient id="guardianFill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#59efff" stop-opacity=".18"/><stop offset="1" stop-color="#9485ff" stop-opacity=".015"/></linearGradient>
+        <filter id="guardianGlow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <g fill="none" stroke="url(#guardianStroke)" filter="url(#guardianGlow)" stroke-linecap="round" stroke-linejoin="round">
+        <ellipse cx="260" cy="382" rx="190" ry="330" stroke-width="1" opacity=".22" stroke-dasharray="3 12"/>
+        <ellipse cx="260" cy="382" rx="158" ry="284" stroke-width="1" opacity=".26"/>
+        <path d="M260 78 C211 78 180 115 180 167 C180 215 208 243 260 245 C312 243 340 215 340 167 C340 115 309 78 260 78Z" fill="url(#guardianFill)" stroke-width="1.5"/>
+        <path d="M202 153 Q260 122 318 153 M195 177 Q260 198 325 177 M224 220 L213 255 L260 275 L307 255 L296 220" stroke-width="1.2" opacity=".8"/>
+        <path d="M213 255 Q166 266 134 304 L95 420 Q89 444 110 451 L130 457 L175 357 L186 503 Q260 535 334 503 L345 357 L390 457 L410 451 Q431 444 425 420 L386 304 Q354 266 307 255" fill="url(#guardianFill)" stroke-width="1.5"/>
+        <path d="M186 293 L225 323 L260 303 L295 323 L334 293 M186 503 L166 639 L202 662 L232 526 M334 503 L354 639 L318 662 L288 526" stroke-width="1.4"/>
+        <path d="M219 334 L260 355 L301 334 L313 470 L260 495 L207 470Z" fill="url(#guardianFill)" stroke-width="1.2"/>
+        <path d="M260 356 V494 M211 411 H309 M226 460 H294" stroke-width="1" opacity=".7"/>
+        <path d="M130 457 L113 579 L146 588 L175 503 M390 457 L407 579 L374 588 L345 503" stroke-width="1.2"/>
+        <path d="M202 662 L185 711 L240 713 L252 667 M318 662 L335 711 L280 713 L268 667" stroke-width="1.2"/>
+        <path d="M146 277 L110 310 M374 277 L410 310 M160 520 L118 554 M360 520 L402 554" stroke-width="1" stroke-dasharray="4 8" opacity=".65"/>
+        <circle cx="260" cy="382" r="18" stroke-width="1.3"/><circle cx="260" cy="382" r="5" fill="#c7fbff" stroke="none"/>
+      </g>
+      <g fill="#8af5ff" opacity=".75"><circle cx="110" cy="310" r="3"/><circle cx="410" cy="310" r="3"/><circle cx="118" cy="554" r="2.5"/><circle cx="402" cy="554" r="2.5"/></g>
+    </svg>
+  </div>
+    <a class="skip-link" href="#main-content">Skip to command interface</a>
+  <div class="hazard-bar"></div>
+
+  <header>
+    <div class="brand">
+      <div class="doomsday-clock" aria-label="Doomsday protocol emblem">
+        <svg viewBox="0 0 64 64" width="44" height="44" aria-hidden="true" style="position:absolute;inset:7px;opacity:.96">
+          <defs><linearGradient id="brandSigil" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#69f7ff"/><stop offset=".55" stop-color="#a88bff"/><stop offset="1" stop-color="#ff638c"/></linearGradient></defs>
+          <circle cx="32" cy="32" r="28" fill="none" stroke="url(#brandSigil)" stroke-width="1.2" stroke-dasharray="3 4"/>
+          <ellipse cx="32" cy="32" rx="12" ry="28" fill="none" stroke="url(#brandSigil)" stroke-width="1.1" transform="rotate(48 32 32)"/>
+          <ellipse cx="32" cy="32" rx="12" ry="28" fill="none" stroke="url(#brandSigil)" stroke-width="1.1" transform="rotate(-48 32 32)"/>
+          <path d="M32 13 37 27 51 32 37 37 32 51 27 37 13 32 27 27Z" fill="rgba(99,239,255,.16)" stroke="url(#brandSigil)" stroke-width="1.2"/>
+          <circle cx="32" cy="32" r="4" fill="#e4fdff"/>
+        </svg>
+        <span style="position:absolute;z-index:1;bottom:5px;font-size:7px;letter-spacing:.8px">TQ / 26</span>
+      </div>
+      <div class="brand-title">
+        <h1>TQSMUN <span>2026</span></h1>
+        <div class="brand-sub">DOOMSDAY PROTOCOL // COMMITTEE #1 // DEFCON 1 ACTIVE</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <div class="status-pill" id="publishStatusPill">
+        <span class="dot red"></span>
+        <span>ARCHIVE STATUS: CLASSIFIED // EB AUDIT</span>
+      </div>
+      <div class="status-pill hidden" id="activeWatcherPill">
+        <span class="dot green"></span>
+        <span id="activeWatcherLabel">WATCHER</span>
+      </div>
+      <button class="btn-primary" id="ebLoginBtn" type="button" onclick="openLoginModal()">LOGIN</button>
+      <button class="btn-outline hidden" id="ebLogoutBtn" onclick="logoutEB()">Lock Terminal</button>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <section class="command-intro" aria-label="Doomsday protocol identity">
+      <div class="intro-copy">
+        <div class="intro-kicker">TQSMUN 2026 &nbsp; / &nbsp; GLOBAL SITUATIONAL AWARENESS <span style="font:9px var(--font-mono);color:#77e6f5;letter-spacing:2px"> ◉ SIGNAL ONLINE</span></div>
+        <div class="intro-heading">THE <span>DOOMSDAY</span><br>PROTOCOL</div>
+        <p class="intro-note">A unified command interface for delegate records, committee proceedings and protocol status.</p>
+      </div>
+      <div class="intro-mark">
+        <svg class="intro-radar" viewBox="0 0 180 180" role="img" aria-label="TQSMUN holographic sentinel emblem">
+          <defs><linearGradient id="sentinelLine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6ee7f9"/><stop offset=".55" stop-color="#b7a2ff"/><stop offset="1" stop-color="#ff718b"/></linearGradient><filter id="sentinelGlow"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+          <g fill="none" stroke="url(#sentinelLine)" filter="url(#sentinelGlow)">
+            <circle cx="90" cy="90" r="76" stroke-width="1.1" opacity=".55"/><circle cx="90" cy="90" r="63" stroke-width=".8" stroke-dasharray="2 5" opacity=".8"/><circle cx="90" cy="90" r="48" stroke-width="1" opacity=".48"/>
+            <path d="M90 7V173M7 90H173M31 31L149 149M149 31L31 149" opacity=".24"/><path d="M90 30L108 67L150 90L108 113L90 150L72 113L30 90L72 67Z" stroke-width="1.3" opacity=".75"/>
+            <path d="M90 52L119 90L90 128L61 90Z" stroke-width="1.5"/><path d="M90 63L108 90L90 117L72 90Z" fill="#6ee7f9" fill-opacity=".12" stroke-width="1.2"/>
+          </g>
+          <circle cx="90" cy="90" r="5" fill="#e9fdff" filter="url(#sentinelGlow)"/><circle cx="133" cy="58" r="3" fill="#ff718b"/><circle cx="48" cy="121" r="2.5" fill="#6ee7f9"/>
+          <text x="90" y="96" text-anchor="middle" font-family="Orbitron,sans-serif" font-size="12" font-weight="700" fill="#f5fbff">TQ</text>
+        </svg>
+        <strong>ALERT SYSTEM / 01</strong><span>EXECUTIVE BOARD MONITORING</span><span>SECURE COMMITTEE NETWORK</span>
+      </div>
+    </section>
+    <section class="protocol-ribbon" aria-label="Portal sections">
+      <div class="ribbon-cell"><span class="ribbon-index">01</span><span><b>DELEGATE INTELLIGENCE</b><small>DOSSIERS &amp; PUBLIC RECORDS</small></span></div>
+      <div class="ribbon-cell"><span class="ribbon-index">02</span><span><b>ATTENDANCE CONTROL</b><small>ROLL-CALL &amp; VERIFICATION</small></span></div>
+      <div class="ribbon-cell"><span class="ribbon-index">03</span><span><b>RESULTS ARCHIVE</b><small>SCORING &amp; RELEASE</small></span></div>
+      <div class="ribbon-status"><i></i> COMMAND INTERFACE
+      </div>
+    </section>
+    <!-- ==================== DELEGATE PORTAL VIEW ==================== -->
+    <div id="delegateView">
+      <div class="panel crimson-border">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">[ DELEGATE DOSSIER &amp; ROLL-CALL VERIFICATION ]</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">
+              Official Doomsday Protocol standing release scheduled for <strong>November 29, 2026 (8:00 PM – 9:00 PM)</strong> post-Closing Ceremony.
+            </p>
+          </div>
+          <div style="min-width: 240px;">
+            <input type="text" id="delegateSearchInput" placeholder="Search portfolio / delegate..." oninput="renderDelegatePortal()" />
+          </div>
+        </div>
+
+        <div id="classifiedBanner" style="text-align: center; padding: 50px 20px; border: 1px dashed var(--accent-crimson); border-radius: 8px; background: rgba(244, 63, 94, 0.04);">
+          <div style="font-family: var(--font-mono); font-size: 1.25rem; font-weight: 900; color: var(--accent-crimson); letter-spacing: 2.5px; margin-bottom: 10px;">
+            [ TRANSMISSION ENCRYPTED // CLEARANCE LEVEL: EXECUTIVE BOARD #1 ]
+          </div>
+          <p style="color: var(--text-secondary); max-width: 580px; margin: 0 auto 18px; font-size: 0.9rem;">
+            Executive Board #1 (Prabeer, Shrestha, Madhulika, Vishnu) is monitoring emergency deliberations. Verify your official attendance records and personal secure dossier below using your credential token.
+          </p>
+          <div style="max-width: 420px; margin: 0 auto; display: flex; gap: 10px; background: var(--bg-card); padding: 14px; border-radius: 6px; border: 1px solid var(--border-hazard);">
+            <select id="selectOwnPortfolioDelegate" onchange="renderSelectedDossier()" style="width: 100%;">
+              <option value="">-- Select Your Portfolio / Delegate Name --</option>
+            </select>
+          </div>
+          <div id="selectedDossierContainerDelegate"></div>
+        </div>
+
+        <div id="publishedContent" class="hidden">
+          <div style="margin-bottom: 20px; background: var(--bg-card); padding: 16px; border-radius: 6px; border: 1px solid var(--border-hazard);">
+            <label for="selectOwnPortfolio">Inspect Your Individual Dossier, Attendance Log, Remarks &amp; Improvement Areas:</label>
+            <select id="selectOwnPortfolio" onchange="renderSelectedDossier()">
+              <option value="">-- Select Your Portfolio / Delegate Name --</option>
+            </select>
+            <div id="selectedDossierContainer"></div>
+          </div>
+
+          <div class="panel-title" style="margin-bottom: 12px;">OFFICIAL DOOMSDAY COMMITTEE LEADERBOARD</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Award</th>
+                  <th>Total Score (<span id="pubMaxTotal">X</span>)</th>
+                  <th>Gap From #1</th>
+                </tr>
+              </thead>
+              <tbody id="publicLeaderboardBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== EB COMMAND CONSOLE VIEW ==================== -->
+    <div id="ebView" class="hidden">
+      <!-- Top Metrics -->
+      <div class="grid-4" style="margin-bottom: 20px;">
+        <div class="stat-card">
+          <div class="stat-label">Total Delegates</div>
+          <div class="stat-value" id="statTotalDelegates">0</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Present (Active Day)</div>
+          <div class="stat-value" id="statPresentCount">0</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Simple / 2-3 Majority</div>
+          <div class="stat-value" id="statMajority">0 / 0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Max Scheme Total (X)</div>
+          <div class="stat-value" id="statSchemeTotal">0</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="tab-scoring" onclick="switchTab('tab-scoring', this)">1. Grading &amp; Delegates</button>
+        <button class="nav-tab" data-tab="tab-rollcall" onclick="switchTab('tab-rollcall', this)">2. Roll Call (2-Step Lock)</button>
+        <button class="nav-tab" data-tab="tab-scheme" onclick="switchTab('tab-scheme', this)">3. Marking Scheme (X)</button>
+        <button class="nav-tab" data-tab="tab-awards" onclick="switchTab('tab-awards', this)">4. Standings, Awards &amp; Publish</button>
+        <button class="nav-tab" data-tab="tab-settings" onclick="switchTab('tab-settings', this)">5. EB Watchers &amp; Backup</button>
+      </div>
+
+      <!-- TAB 1: GRADING & DELEGATES -->
+      <div id="tab-scoring" class="tab-pane">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">ADD NEW DELEGATE / PORTFOLIO</div>
+          </div>
+          <form onsubmit="addDelegate(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; align-items: end;">
+            <div>
+              <label>Portfolio / Country / Character *</label>
+              <input type="text" id="newDelPortfolio" placeholder="e.g., United States / Director Vance" required />
+            </div>
+            <div>
+              <label>Delegate Full Name (Optional)</label>
+              <input type="text" id="newDelName" placeholder="e.g., Aarav Sharma" />
+            </div>
+            <div>
+              <button type="submit" class="btn-primary" style="width: 100%;">+ Add to Committee</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">LIVE DOOMSDAY MARKING MATRIX</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Click <strong>Grade / Remarks</strong> on any delegate to log multiple speeches (auto-averaged), edit direct section scores, assign awards, or write feedback.
+              </p>
+            </div>
+            <div style="min-width: 220px;">
+              <input type="text" id="ebSearchDelegate" placeholder="Filter delegates..." oninput="renderEBTable()" />
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr id="ebMatrixHead"></tr>
+              </thead>
+              <tbody id="ebMatrixBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ROLL CALL -->
+      <div id="tab-rollcall" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">SECURE ATTENDANCE &amp; VOTING PROTOCOL (2-STEP LOCK)</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Attendance and voting status for Day 1 and Day 2 are permanently sealed once locked via 2-step verification. Delegates can review their locked attendance status in their portal.
+              </p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <label style="margin: 0;">Active Quorum Day:</label>
+              <select id="activeDaySelect" onchange="changeActiveDay()" style="width: auto;">
+                <option value="day1">Day 1 — Nov 28, 2026</option>
+                <option value="day2">Day 2 — Nov 29, 2026</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn-amber" onclick="openLockModal('day1')">🔒 Securely Lock Day 1 Attendance</button>
+            <button class="btn-amber" onclick="openLockModal('day2')">🔒 Securely Lock Day 2 Attendance</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Day 1 (Nov 28) <span id="lockStatusDay1" class="badge badge-present hidden" style="margin-left: 6px;">LOCKED</span></th>
+                  <th>Day 2 (Nov 29) <span id="lockStatusDay2" class="badge badge-present hidden" style="margin-left: 6px;">LOCKED</span></th>
+                </tr>
+              </thead>
+              <tbody id="rollCallBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: MARKING SCHEME BUILDER -->
+      <div id="tab-scheme" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">FLEXIBLE MARKING SCHEME BUILDER (SUM = X)</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Add or modify grading sections anytime during the committee. Use <strong>Multi-Entry Average</strong> for Speeches/POIs or <strong>Direct Score</strong> for single criteria.
+              </p>
+            </div>
+            <div class="status-pill">
+              <span>CURRENT X = <strong id="schemeSumBadge" style="color: var(--accent-amber);">0</strong> PTS</span>
+            </div>
+          </div>
+
+          <form onsubmit="addSchemeSection(event)" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; align-items: end; margin-bottom: 20px; background: var(--bg-card); padding: 14px; border-radius: 6px; border: 1px solid var(--border-hazard);">
+            <div>
+              <label>Section Title *</label>
+              <input type="text" id="secTitle" placeholder="e.g., Speeches / Crisis Directives" required />
+            </div>
+            <div>
+              <label>Max Marks *</label>
+              <input type="number" id="secMax" min="1" step="0.5" placeholder="e.g., 20" required />
+            </div>
+            <div>
+              <label>Calculation Mode</label>
+              <select id="secMode">
+                <option value="average">Multi-Entry Average (e.g., Speeches)</option>
+                <option value="direct">Direct Single Score</option>
+              </select>
+            </div>
+            <div>
+              <button type="submit" class="btn-amber" style="width: 100%;">+ Add Section</button>
+            </div>
+          </form>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Section Name</th>
+                  <th>Mode</th>
+                  <th>Max Marks</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="schemeTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: STANDINGS, AWARDS & PUBLISH -->
+      <div id="tab-awards" class="tab-pane hidden">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">AWARDS, GAP ANALYSIS &amp; PROTOCOL RELEASE</div>
+              <p style="font-size: 0.82rem; color: var(--text-secondary);">
+                Assign awards, verify point gaps from #1, and publish results after the Closing Ceremony on Nov 29 (8:00–9:00 PM).
+              </p>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button id="togglePublishBtn" class="btn-primary" onclick="togglePublishState()">Publish Results to Delegates</button>
+              <button class="btn-amber" onclick="copyShareableResultsLink()">Copy Delegate Results Link</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Portfolio / Delegate</th>
+                  <th>Total (<span id="awMaxTotal">X</span>)</th>
+                  <th>Gap From #1</th>
+                  <th>Assigned Award</th>
+                  <th>Remarks &amp; Improvement</th>
+                </tr>
+              </thead>
+              <tbody id="awardsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: EB WATCHERS & BACKUP -->
+      <div id="tab-settings" class="tab-pane hidden">
+        <div class="grid-2">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">EB #1 HIERARCHY &amp; CREDENTIALS</div>
+            </div>
+            <div id="watchersEditorList" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;"></div>
+            <div id="credentialAdminPanel" style="margin:14px 0"></div>
+            <div class="auth-hint">Watcher 4 — Vishnu is the sole administrator. All Watchers share one EB password.</div>
+            <button id="saveWatcherProfilesBtn" class="btn-primary" onclick="saveEBSettings()">Save Watcher Profiles</button>
+            <button id="changeSharedPasswordBtn" class="btn-outline" style="margin-top:8px" onclick="changeSharedEBPassword()">Change Shared EB Password</button>
+          </div>
+
+          <div class="panel" id="backupAdminPanel">
+            <div class="panel-header">
+              <div class="panel-title">SYNC &amp; BACKUP TOOLS</div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;">
+              Export or import JSON backups of committee states and locked attendance.
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <button class="btn-outline" onclick="exportJSONBackup()">Export JSON Backup</button>
+              <label class="btn-outline" style="cursor: pointer; text-align: center; margin: 0;">
+                Import JSON Backup
+                <input type="file" accept=".json" onchange="importJSONBackup(event)" style="display: none;" />
+              </label>
+              <button class="btn-danger" onclick="resetAllData()">Reset Terminal to Factory Defaults</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="portal-footer">
+    <div><span class="footer-mark">TQS / 26</span><span>DOOMSDAY PROTOCOL</span></div>
+    <span class="footer-center">COMMITTEE OPERATIONS INTERFACE <i></i> EXECUTIVE BOARD WORKSPACE</span>
+    <span class="footer-right">AUTHORIZED ACCESS ONLY</span>
+  </footer>
+  <button class="back-to-top" id="backToTop" type="button" aria-label="Back to top" title="Back to top">↑</button>
+
+  <!-- ==================== SHARED EB LOGIN ==================== -->
+  <div class="modal-backdrop auth-backdrop" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-describedby="authDescription">
+    <div class="auth-shell">
+      <section class="auth-visual" aria-hidden="true">
+        <div class="auth-visual-top"><span class="signal-light"></span> TQS / SECURE NETWORK <span>ENCRYPTED CHANNEL</span></div>
+        <div class="auth-orbit-wrap">
+          <div class="auth-orbit orbit-a"></div><div class="auth-orbit orbit-b"></div><div class="auth-orbit orbit-c"></div>
+          <div class="auth-core"></div>
+          <svg class="auth-avatar" viewBox="0 0 360 440" role="presentation">
+            <defs>
+              <linearGradient id="authLine" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#75faff"/><stop offset=".53" stop-color="#9a8cff"/><stop offset="1" stop-color="#ff668f"/></linearGradient>
+              <filter id="authBloom"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g fill="none" stroke="url(#authLine)" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" filter="url(#authBloom)">
+              <path d="M180 44c-44 0-66 33-66 78 0 41 25 66 66 66s66-25 66-66c0-45-22-78-66-78Z" fill="rgba(103,241,255,.06)"/>
+              <path d="M125 108q55-35 110 0M120 132q60 21 120 0M145 177l-14 31-53 28q-20 13-28 47l-17 97q-4 24 20 28l19-1 33-116 18 88q57 22 114 0l18-88 33 116 19 1q24-4 20-28l-17-97q-8-34-28-47l-53-28-14-31" fill="rgba(103,241,255,.045)"/>
+              <path d="M130 210 180 235 230 210M103 285l77 21 77-21M111 363l-8 54 34 7 35-55M249 363l8 54-34 7-35-55M160 229l20 19 20-19 18 116-38 25-38-25Z"/>
+              <path d="M180 248v121M142 286h76M150 339h60" opacity=".65"/>
+              <circle cx="180" cy="300" r="12"/><circle cx="180" cy="300" r="3" fill="#dcffff"/>
+              <path d="M60 138h35m170 0h35M41 165h30m218 0h30M55 387h42m166 0h42" stroke-dasharray="3 6" opacity=".65"/>
+            </g>
+            <g fill="#a5fbff"><circle cx="77" cy="236" r="3"/><circle cx="283" cy="236" r="3"/><circle cx="101" cy="417" r="2.5"/><circle cx="259" cy="417" r="2.5"/></g>
+          </svg>
+          <div class="auth-crosshair crosshair-one"></div><div class="auth-crosshair crosshair-two"></div>
+        </div>
+        <div class="auth-visual-copy"><div class="auth-overline">GLOBAL RESPONSE NETWORK / 2026</div><h2>WHEN THE WORLD<br><em>GOES DARK</em></h2><p>One shared key. Four Watchers. One command network.</p></div>
+        <div class="auth-visual-footer"><span>PROTOCOL 01.26</span><span>WATCHER CLEARANCE REQUIRED</span></div>
+      </section>
+      <section class="auth-console">
+        <div class="auth-console-head"><div class="auth-brand-mark">TQ<span>◈</span>26</div><button class="auth-close" type="button" onclick="closeLoginModal()" aria-label="Close login">×</button></div>
+        <div class="auth-kicker"><span class="signal-light"></span> EXECUTIVE BOARD / LOGIN</div>
+        <h2 id="authTitle">EB <em>Login.</em></h2>
+        <p id="authDescription" class="auth-description">Choose the Watcher profile you are using. All four Watchers use the same shared EB password.</p>
+        <div class="watcher-auth-grid" id="watcherLoginCards"></div>
+        <form id="watcherLoginForm" autocomplete="on" onsubmit="handleEBLogin(event); return false;">
+          <div class="auth-selected-label" id="loginSelectedLabel">NO WATCHER SELECTED <span>SELECT PROFILE ABOVE</span></div>
+          <div class="auth-field-wrap">
+            <label for="loginPasscodeInput">SHARED EB PASSWORD</label>
+            <div class="auth-input-shell"><input type="password" id="loginPasscodeInput" placeholder="Enter shared EB password" autocomplete="current-password" required /><button type="button" class="password-toggle" data-target="loginPasscodeInput" aria-label="Show password">◉</button></div>
+          </div>
+          <div id="loginFeedback" class="auth-feedback" role="status" aria-live="polite">Select your Watcher profile, then enter the shared password.</div>
+          <button type="submit" id="loginSubmitBtn" class="auth-submit" disabled><span>LOGIN</span><b>↗</b></button>
+        </form>
+        <div class="auth-console-foot"><span>◈ ONE SHARED EB PASSWORD</span><span>LOCAL TERMINAL MODE</span></div>
+        <p class="auth-hint">Shared EB password: <strong>DOOMS123</strong>. Watcher 4 — Vishnu has full administrator controls.</p>
+        <button type="button" id="restoreDefaultPasswordBtn" class="auth-recovery-btn">RESTORE DEFAULT LOGIN · KEEP ALL COMMITTEE DATA</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- ==================== 2-STEP LOCK VERIFICATION MODAL ==================== -->
+  <div class="modal-backdrop" id="lockModal">
+    <div class="modal" style="max-width: 440px;">
+      <div class="panel-header">
+        <div class="panel-title" id="lockModalTitle">SECURE 2-STEP ATTENDANCE LOCK</div>
+        <button class="btn-outline btn-sm" onclick="closeLockModal()">✕</button>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 14px;">
+        Warning: Locking attendance makes all records for this day unchangeable. Confirm the authorizing Watcher and enter the shared EB password.
+      </p>
+      <form onsubmit="confirmLockAttendance(event)">
+        <div style="margin-bottom: 14px;">
+          <label>Step 1: Confirm Authorizing EB Watcher</label>
+          <select id="lockVerifierSelect" required></select>
+        </div>
+        <div style="margin-bottom: 18px;">
+          <label>Step 2: Enter EB Passcode to Seal Lock</label>
+          <input type="password" id="lockPasscodeInput" placeholder="Enter shared EB password" required />
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">🔒 Authorize &amp; Seal Attendance Lock</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== DELEGATE GRADING MODAL ==================== -->
+  <div class="modal-backdrop" id="gradeModal">
+    <div class="modal">
+      <div class="panel-header">
+        <div>
+          <div class="panel-title" id="gradeModalTitle">DELEGATE SCORING</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary);" id="gradeModalSub">Two-way editable scoring &amp; feedback</div>
+        </div>
+        <button class="btn-outline btn-sm" onclick="closeGradeModal()">✕</button>
+      </div>
+
+      <div id="gradeModalSections" style="display: flex; flex-direction: column; gap: 16px;"></div>
+
+      <div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-hazard);">
+        <div class="grid-2">
+          <div>
+            <label>Award Allocation</label>
+            <select id="modalAwardSelect">
+              <option value="">None / Participant</option>
+              <option value="Best Delegate">Best Delegate</option>
+              <option value="High Commendation">High Commendation</option>
+              <option value="Special Mention">Special Mention</option>
+              <option value="Honourable Mention">Honourable Mention</option>
+              <option value="Best Position Paper">Best Position Paper</option>
+            </select>
+          </div>
+          <div>
+            <label>Calculated Total</label>
+            <div id="modalLiveTotal" style="font-family: var(--font-mono); font-size: 1.3rem; font-weight: 900; color: var(--accent-amber); padding-top: 4px;">0 / 0</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px;">
+          <label>EB Remarks (Visible to Delegate on Release)</label>
+          <textarea id="modalRemarksInput" rows="2" placeholder="Overall committee performance notes..."></textarea>
+        </div>
+
+        <div style="margin-top: 12px;">
+          <label>Places Where They Can Improve</label>
+          <textarea id="modalImproveInput" rows="2" placeholder="Specific tactical, diplomatic, or procedural areas to improve..."></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+          <button class="btn-outline" onclick="closeGradeModal()">Close</button>
+          <button class="btn-primary" onclick="saveDelegateModalMeta()">Save Remarks &amp; Award</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    const DEFAULT_STATE = {
+      passcode: "DOOMS123",
+      published: false,
+      activeDay: "day1",
+      lockedDays: { day1: false, day2: false },
+      watchers: [
+        { role: "Watcher 1", name: "Prabeer" },
+        { role: "Watcher 2", name: "Shrestha" },
+        { role: "Watcher 3", name: "Madhulika" },
+        { role: "Watcher 4", name: "Vishnu" }
+      ],
+      scheme: [
+        { id: "sec_speeches", title: "Speeches & Interventions", max: 30, mode: "average" },
+        { id: "sec_lobby", title: "Lobbying & Bloc Building", max: 25, mode: "direct" },
+        { id: "sec_crisis", title: "Crisis Directives & Docs", max: 25, mode: "direct" },
+        { id: "sec_policy", title: "Foreign Policy & Conduct", max: 20, mode: "direct" }
+      ],
+      delegates: [
+        {
+          id: "del_1",
+          portfolio: "Director of Strategic Defense",
+          name: "Sample Delegate 1",
+          day1: "P+",
+          day2: "P+",
+          scores: { sec_speeches: [24, 27], sec_lobby: 21, sec_crisis: 22, sec_policy: 18 },
+          award: "",
+          remarks: "Strong opening stance during emergency session.",
+          improve: "Coordinate faster with allied portfolios during crisis updates."
+        },
+        {
+          id: "del_2",
+          portfolio: "Minister of Intelligence",
+          name: "Sample Delegate 2",
+          day1: "P",
+          day2: "P",
+          scores: { sec_speeches: [22], sec_lobby: 19, sec_crisis: 20, sec_policy: 17 },
+          award: "",
+          remarks: "Analytical interventions and solid procedural command.",
+          improve: "Take the floor more frequently during unmoderated caucuses."
+        }
+      ]
+    };
+
+    const STORAGE_KEY = "tqsmun2026_doomsday_state_v3";
+    const LEGACY_STORAGE_KEYS = ["tqsmun2026_doomsday_state_v2"];
+    let state = loadState();
+    // Authentication is stored separately from imported/legacy committee data.
+    // This prevents an old saved passcode or migration flag from blocking login.
+    const SHARED_EB_PASSWORD_KEY = "tqsmun2026_shared_eb_password_v1";
+    let sharedEBPassword = "DOOMS123";
+    try {
+      const savedSharedPassword = localStorage.getItem(SHARED_EB_PASSWORD_KEY);
+      if (typeof savedSharedPassword === "string" && savedSharedPassword.length) {
+        sharedEBPassword = savedSharedPassword;
+      } else {
+        localStorage.setItem(SHARED_EB_PASSWORD_KEY, sharedEBPassword);
+      }
+    } catch (authStorageError) {
+      console.warn("Browser storage unavailable; using the default shared EB password for this session.", authStorageError);
+    }
+    state.passcode = sharedEBPassword;
+    let currentWatcher = null;
+    let selectedWatcherAccount = null;
+    let editingDelegateId = null;
+    // Authentication is intentionally one shared EB password. Remove obsolete
+    // per-Watcher hash records from earlier builds so they cannot block login.
+    if (!state.passcode || typeof state.passcode !== "string") state.passcode = "DOOMS123";
+    if (state.authAccounts) delete state.authAccounts;
+    if (!Array.isArray(state.watchers) || !state.watchers.length) {
+      state.watchers = JSON.parse(JSON.stringify(DEFAULT_STATE.watchers));
+    }
+
+    function getSharedEBPassword() {
+      return sharedEBPassword;
+    }
+
+    function isWatcherFour(label) {
+      return /^Watcher 4(?:\s*:|$)/i.test(String(label || ""));
+    }
+
+    function setLoginFeedback(message, tone = "neutral") {
+      const el = document.getElementById("loginFeedback");
+      if (!el) return;
+      el.textContent = message;
+      el.dataset.tone = tone;
+    }
+
+    function selectWatcherLogin(label) {
+      selectedWatcherAccount = label;
+      document.querySelectorAll(".watcher-auth-card").forEach(card => {
+        card.classList.toggle("selected", card.dataset.value === label);
+        card.setAttribute("aria-pressed", card.dataset.value === label ? "true" : "false");
+      });
+      const watcher = state.watchers.find(w => `${w.role}: ${w.name}` === label);
+      const displayName = watcher ? `${watcher.role} — ${watcher.name}` : label;
+      const selectedLabel = document.getElementById("loginSelectedLabel");
+      selectedLabel.innerHTML = `${escapeAuthText(displayName)} <span>${isWatcherFour(label) ? "FULL ADMINISTRATOR" : "EB OPERATOR"}</span>`;
+      document.getElementById("loginSubmitBtn").disabled = false;
+      document.getElementById("loginPasscodeInput").focus();
+      setLoginFeedback("Watcher selected. Enter the shared EB password to continue.");
+    }
+
+    function escapeAuthText(value) {
+      return String(value).replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+    }
+
+    function toggleAuthPassword(targetId, button) {
+      const input = document.getElementById(targetId);
+      if (!input) return;
+      input.type = input.type === "password" ? "text" : "password";
+      button.setAttribute("aria-label", input.type === "password" ? "Show password" : "Hide password");
+      button.classList.toggle("is-visible", input.type === "text");
+    }
+
+    function changeSharedEBPassword() {
+      if (!isWatcherFour(currentWatcher)) {
+        alert("Watcher 4 — Vishnu administrator access is required.");
+        return;
+      }
+      const enteredNext = prompt("Set the NEW shared EB password for all four Watchers (minimum 8 characters):");
+      if (enteredNext === null) return;
+      const next = enteredNext.trim();
+      if (next.length < 8) { alert("Use at least 8 characters."); return; }
+      const confirmation = prompt("Confirm the new shared EB password:");
+      if (next !== String(confirmation ?? "").trim()) { alert("The passwords do not match. No change was made."); return; }
+      sharedEBPassword = next;
+      state.passcode = sharedEBPassword;
+      try { localStorage.setItem(SHARED_EB_PASSWORD_KEY, sharedEBPassword); } catch (e) {}
+      saveState();
+      showToast("SHARED EB PASSWORD UPDATED // ALL WATCHERS");
+    }
+
+    function resetWatcherAccount() {
+      alert("All four Watchers use one shared EB password. To change it, use Watcher 4 administrator controls.");
+    }
+
+    function restoreDefaultEBPassword() {
+      const accepted = confirm("Reset the shared EB password to DOOMS123? This will NOT delete delegate records, scores, attendance, awards or committee settings.");
+      if (!accepted) return;
+      sharedEBPassword = "DOOMS123";
+      state.passcode = sharedEBPassword;
+      try { localStorage.setItem(SHARED_EB_PASSWORD_KEY, sharedEBPassword); } catch (e) {}
+      saveState();
+      const input = document.getElementById("loginPasscodeInput");
+      if (input) { input.value = ""; input.focus(); }
+      setLoginFeedback("Shared EB password restored to DOOMS123. Your committee data was kept.", "success");
+    }
+
+    function loadState() {
+      try {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith("#results=")) {
+          const parsed = JSON.parse(atob(decodeURIComponent(hash.replace("#results=", ""))));
+          if (parsed && parsed.delegates) return parsed;
+        }
+      } catch (e) {
+        console.warn("Could not parse URL results payload", e);
+      }
+
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) return JSON.parse(raw);
+        // Preserve committee records from previous portal versions.
+        for (const legacyKey of LEGACY_STORAGE_KEYS) {
+          const legacyRaw = localStorage.getItem(legacyKey);
+          if (!legacyRaw) continue;
+          const legacyState = JSON.parse(legacyRaw);
+          if (legacyState && Array.isArray(legacyState.delegates)) {
+            if (!legacyState.passcode) legacyState.passcode = "DOOMS123";
+            delete legacyState.authAccounts;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(legacyState));
+            return legacyState;
+          }
+        }
+      } catch (e) {
+        console.warn("LocalStorage unavailable or migration failed", e);
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_STATE));
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.warn("Failed to save state", e);
+      }
+      renderAll();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3000);
+    }
+
+    function getSchemeTotal() {
+      return state.scheme.reduce((sum, s) => sum + (parseFloat(s.max) || 0), 0);
+    }
+
+    function getDelegateSectionScore(del, sec) {
+      const val = del.scores ? del.scores[sec.id] : undefined;
+      if (sec.mode === "average") {
+        if (!Array.isArray(val) || val.length === 0) return 0;
+        return val.reduce((a, b) => a + (parseFloat(b) || 0), 0) / val.length;
+      } else {
+        return parseFloat(val) || 0;
+      }
+    }
+
+    function getDelegateTotal(del) {
+      return state.scheme.reduce((sum, sec) => sum + getDelegateSectionScore(del, sec), 0);
+    }
+
+    function getRankedDelegates() {
+      const list = state.delegates.map(del => ({ ...del, total: getDelegateTotal(del) }));
+      list.sort((a, b) => b.total - a.total);
+      const topScore = list.length > 0 ? list[0].total : 0;
+      return list.map((item, idx) => ({ ...item, rank: idx + 1, gap: Math.max(0, topScore - item.total) }));
+    }
+
+    function openLoginModal() {
+      const cards = document.getElementById("watcherLoginCards");
+      cards.innerHTML = state.watchers.map(w => {
+        const label = `${w.role}: ${w.name}`;
+        const serial = String(w.role).replace(/[^0-9]/g, "").padStart(2, "0");
+        const adminTag = isWatcherFour(label) ? "FULL ADMIN" : "EB OPERATOR";
+        return `<button type="button" class="watcher-auth-card" data-value="${escapeAuthText(label)}" aria-pressed="false"><span class="watcher-card-index">0${serial}</span><span class="watcher-card-orbit">◈</span><strong>${escapeAuthText(w.role).toUpperCase()}</strong><span class="watcher-card-name">${escapeAuthText(w.name)}</span><small>${adminTag}</small></button>`;
+      }).join("");
+      selectedWatcherAccount = null;
+      document.getElementById("loginSelectedLabel").innerHTML = `NO WATCHER SELECTED <span>SELECT PROFILE ABOVE</span>`;
+      document.getElementById("loginPasscodeInput").value = "";
+      document.getElementById("loginSubmitBtn").disabled = true;
+      document.getElementById("loginSubmitBtn").querySelector("span").textContent = "LOGIN";
+      setLoginFeedback("Watcher 4 — Vishnu is preselected. Choose another profile if needed, then enter the shared EB password.");
+      document.getElementById("loginModal").classList.add("open");
+      document.body.classList.add("auth-open");
+      const owner = state.watchers.find(w => /^Watcher 4$/i.test(String(w.role || "")));
+      const initialWatcher = owner || state.watchers[0];
+      if (initialWatcher) selectWatcherLogin(`${initialWatcher.role}: ${initialWatcher.name}`);
+      const selected = cards.querySelector(".watcher-auth-card.selected") || cards.querySelector(".watcher-auth-card");
+      if (selected) selected.focus({preventScroll:true});
+    }
+
+    function closeLoginModal() {
+      document.getElementById("loginModal").classList.remove("open");
+      document.body.classList.remove("auth-open");
+    }
+
+    function handleEBLogin(e) {
+      e.preventDefault();
+      const submit = document.getElementById("loginSubmitBtn");
+      const watcher = selectedWatcherAccount;
+      const entered = document.getElementById("loginPasscodeInput").value.trim();
+      if (!watcher) {
+        setLoginFeedback("Select your assigned Watcher profile first.", "error");
+        return;
+      }
+      if (!entered) {
+        setLoginFeedback("Enter the shared EB password.", "error");
+        document.getElementById("loginPasscodeInput").focus();
+        return;
+      }
+      submit.disabled = true;
+      submit.querySelector("span").textContent = "VERIFYING…";
+      if (entered !== getSharedEBPassword()) {
+        setLoginFeedback("ACCESS DENIED. Check the password, or use RESTORE DEFAULT LOGIN below if this is an upgraded copy.", "error");
+        submit.disabled = false;
+        submit.querySelector("span").textContent = "LOGIN";
+        document.getElementById("loginPasscodeInput").focus();
+        document.getElementById("loginPasscodeInput").select();
+        return;
+      }
+      currentWatcher = watcher;
+      closeLoginModal();
+      showToast(`ACCESS GRANTED // ${watcher.toUpperCase()}`);
+      renderAll();
+    }
+
+    function logoutEB() {
+      currentWatcher = null;
+      showToast("TERMINAL LOCKED // DELEGATE VIEW ACTIVE");
+      renderAll();
+    }
+
+    let lockingTargetDay = null;
+
+    /* 2-Step Lock Attendance */
+    function openLockModal(dayKey) {
+      if (state.lockedDays[dayKey]) {
+        alert(`Day ${dayKey === 'day1' ? '1' : '2'} attendance is already permanently locked.`);
+        return;
+      }
+      lockingTargetDay = dayKey;
+      document.getElementById("lockModalTitle").textContent = `SECURE 2-STEP LOCK: ${dayKey === 'day1' ? 'DAY 1 (NOV 28)' : 'DAY 2 (NOV 29)'}`;
+      const sel = document.getElementById("lockVerifierSelect");
+      sel.innerHTML = state.watchers.map(w => `<option value="${w.role}: ${w.name}">${w.role} — ${w.name}</option>`).join("");
+      document.getElementById("lockPasscodeInput").value = "";
+      document.getElementById("lockModal").classList.add("open");
+    }
+
+    function closeLockModal() {
+      lockingTargetDay = null;
+      document.getElementById("lockModal").classList.remove("open");
+    }
+
+    async function confirmLockAttendance(e) {
+      e.preventDefault();
+      const pass = document.getElementById("lockPasscodeInput").value;
+      const verifier = document.getElementById("lockVerifierSelect").value;
+      if (pass !== getSharedEBPassword()) { alert("ACCESS DENIED: Incorrect shared EB password."); return; }
+      if (!lockingTargetDay) return;
+      state.lockedDays[lockingTargetDay] = true;
+      saveState(); closeLockModal();
+      showToast(`ATTENDANCE LOCKED & SEALED FOR ${lockingTargetDay.toUpperCase()} BY ${verifier.toUpperCase()}`);
+    }
+
+    function cycleAttendance(id, dayKey) {
+      if (state.lockedDays[dayKey]) {
+        alert(`Attendance for ${dayKey === 'day1' ? 'Day 1' : 'Day 2'} is LOCKED by 2-step EB verification and cannot be modified.`);
+        return;
+      }
+      const order = ["P+", "P", "A"];
+      const del = state.delegates.find(d => d.id === id);
+      if (!del) return;
+      del[dayKey] = order[(order.indexOf(del[dayKey]) + 1) % order.length];
+      saveState();
+    }
+
+    function changeActiveDay() {
+      state.activeDay = document.getElementById("activeDaySelect").value;
+      saveState();
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.add("hidden"));
+      document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+      document.getElementById(tabId).classList.remove("hidden");
+      btn.classList.add("active");
+    }
+
+    /* Delegates */
+    function addDelegate(e) {
+      e.preventDefault();
+      const portfolio = document.getElementById("newDelPortfolio").value.trim();
+      const name = document.getElementById("newDelName").value.trim();
+      if (!portfolio) return;
+
+      const scores = {};
+      state.scheme.forEach(s => { scores[s.id] = s.mode === "average" ? [] : 0; });
+
+      state.delegates.push({
+        id: "del_" + Date.now(),
+        portfolio,
+        name,
+        day1: "P+",
+        day2: "P+",
+        scores,
+        award: "",
+        remarks: "",
+        improve: ""
+      });
+
+      document.getElementById("newDelPortfolio").value = "";
+      document.getElementById("newDelName").value = "";
+      saveState();
+      showToast(`Added ${portfolio}`);
+    }
+
+    function deleteDelegate(id) {
+      if (!confirm("Remove this delegate and all associated records?")) return;
+      state.delegates = state.delegates.filter(d => d.id !== id);
+      saveState();
+      showToast("Delegate removed.");
+    }
+
+    /* Scheme */
+    function addSchemeSection(e) {
+      e.preventDefault();
+      const title = document.getElementById("secTitle").value.trim();
+      const max = parseFloat(document.getElementById("secMax").value);
+      const mode = document.getElementById("secMode").value;
+      if (!title || isNaN(max) || max <= 0) return;
+
+      const id = "sec_" + Date.now();
+      state.scheme.push({ id, title, max, mode });
+      state.delegates.forEach(d => {
+        if (!d.scores) d.scores = {};
+        d.scores[id] = mode === "average" ? [] : 0;
+      });
+
+      document.getElementById("secTitle").value = "";
+      document.getElementById("secMax").value = "";
+      saveState();
+      showToast(`Added section: ${title}`);
+    }
+
+    function updateSchemeSection(id, field, value) {
+      const sec = state.scheme.find(s => s.id === id);
+      if (!sec) return;
+      if (field === "max") {
+        const num = parseFloat(value);
+        if (!isNaN(num) && num > 0) sec.max = num;
+      } else if (field === "title") {
+        if (value.trim()) sec.title = value.trim();
+      } else if (field === "mode") {
+        sec.mode = value;
+      }
+      saveState();
+    }
+
+    function deleteSchemeSection(id) {
+      if (!confirm("Delete marking section?")) return;
+      state.scheme = state.scheme.filter(s => s.id !== id);
+      state.delegates.forEach(d => { if (d.scores) delete d.scores[id]; });
+      saveState();
+      showToast("Section removed.");
+    }
+
+    /* Grading Modal */
+    function openGradeModal(delId) {
+      editingDelegateId = delId;
+      const del = state.delegates.find(d => d.id === delId);
+      if (!del) return;
+
+      document.getElementById("gradeModalTitle").textContent = del.portfolio;
+      document.getElementById("gradeModalSub").textContent = del.name ? `Delegate: ${del.name}` : "Two-way editable scoring & feedback";
+      document.getElementById("modalAwardSelect").value = del.award || "";
+      document.getElementById("modalRemarksInput").value = del.remarks || "";
+      document.getElementById("modalImproveInput").value = del.improve || "";
+
+      renderGradeModalSections();
+      document.getElementById("gradeModal").classList.add("open");
+    }
+
+    function closeGradeModal() {
+      editingDelegateId = null;
+      document.getElementById("gradeModal").classList.remove("open");
+    }
+
+    function renderGradeModalSections() {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      if (!del) return;
+
+      const container = document.getElementById("gradeModalSections");
+      container.innerHTML = state.scheme.map(sec => {
+        const avgOrVal = getDelegateSectionScore(del, sec);
+        if (sec.mode === "average") {
+          const entries = Array.isArray(del.scores[sec.id]) ? del.scores[sec.id] : [];
+          const chipsHtml = entries.length
+            ? entries.map((val, idx) => `
+                <span class="entry-chip">
+                  <span>#${idx + 1}: <strong>${val}</strong>/${sec.max}</span>
+                  <button type="button" onclick="editMultiEntry('${sec.id}', ${idx})">✎</button>
+                  <button type="button" onclick="removeMultiEntry('${sec.id}', ${idx})">✕</button>
+                </span>
+              `).join("")
+            : `<span style="font-size: 0.8rem; color: var(--text-muted);">No entries logged yet</span>`;
+
+          return `
+            <div style="background: var(--bg-card); border: 1px solid var(--border-hazard); padding: 14px; border-radius: 6px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 0.85rem;">${sec.title} (Max ${sec.max})</strong>
+                <span class="badge badge-present">AVG: ${avgOrVal.toFixed(2)} / ${sec.max}</span>
+              </div>
+              <div style="margin-bottom: 10px;">${chipsHtml}</div>
+              <div style="display: flex; gap: 8px;">
+                <input type="number" id="newEntryInput_${sec.id}" min="0" max="${sec.max}" step="0.5" placeholder="Log Speech #${entries.length + 1}" />
+                <button type="button" class="btn-amber btn-sm" onclick="addMultiEntry('${sec.id}')">+ Log Entry</button>
+              </div>
+            </div>
+          `;
+        } else {
+          const currentVal = del.scores[sec.id] ?? 0;
+          return `
+            <div style="background: var(--bg-card); border: 1px solid var(--border-hazard); padding: 14px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
+              <div>
+                <strong style="color: var(--accent-amber); font-family: var(--font-mono); font-size: 0.85rem;">${sec.title}</strong>
+                <div style="font-size: 0.78rem; color: var(--text-secondary);">Direct Single Score (0 to ${sec.max})</div>
+              </div>
+              <div style="width: 140px;">
+                <input type="number" min="0" max="${sec.max}" step="0.5" value="${currentVal}" onchange="updateDirectScore('${sec.id}', this.value)" />
+              </div>
+            </div>
+          `;
+        }
+      }).join("");
+
+      document.getElementById("modalLiveTotal").textContent = `${getDelegateTotal(del).toFixed(2)} / ${getSchemeTotal()}`;
+    }
+
+    function addMultiEntry(secId) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      const input = document.getElementById(`newEntryInput_${secId}`);
+      const val = parseFloat(input.value);
+      if (isNaN(val) || val < 0 || val > sec.max) {
+        alert(`Please enter a valid score between 0 and ${sec.max}.`);
+        return;
+      }
+      if (!Array.isArray(del.scores[secId])) del.scores[secId] = [];
+      del.scores[secId].push(val);
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function editMultiEntry(secId, index) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      const updated = prompt(`Edit Entry #${index + 1} score (0 to ${sec.max}):`, del.scores[secId][index]);
+      if (updated === null) return;
+      const num = parseFloat(updated);
+      if (isNaN(num) || num < 0 || num > sec.max) return;
+      del.scores[secId][index] = num;
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function removeMultiEntry(secId, index) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      del.scores[secId].splice(index, 1);
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function updateDirectScore(secId, value) {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      const sec = state.scheme.find(s => s.id === secId);
+      let num = parseFloat(value);
+      if (isNaN(num) || num < 0) num = 0;
+      if (num > sec.max) num = sec.max;
+      del.scores[secId] = num;
+      saveState();
+      renderGradeModalSections();
+    }
+
+    function saveDelegateModalMeta() {
+      const del = state.delegates.find(d => d.id === editingDelegateId);
+      if (!del) return;
+      del.award = document.getElementById("modalAwardSelect").value;
+      del.remarks = document.getElementById("modalRemarksInput").value.trim();
+      del.improve = document.getElementById("modalImproveInput").value.trim();
+      saveState();
+      closeGradeModal();
+      showToast(`Saved records for ${del.portfolio}`);
+    }
+
+    function updateAwardInline(delId, awardVal) {
+      const del = state.delegates.find(d => d.id === delId);
+      if (!del) return;
+      del.award = awardVal;
+      saveState();
+      showToast("Award updated");
+    }
+
+    function togglePublishState() {
+      state.published = !state.published;
+      saveState();
+      showToast(state.published ? "RESULTS PUBLISHED TO DELEGATE PORTALS" : "RESULTS ENCRYPTED (CLASSIFIED)");
+    }
+
+    function copyShareableResultsLink() {
+      const payload = { published: true, scheme: state.scheme, delegates: state.delegates };
+      const encoded = encodeURIComponent(btoa(JSON.stringify(payload)));
+      const shareUrl = `${window.location.href.split("#")[0]}#results=${encoded}`;
+      navigator.clipboard.writeText(shareUrl).then(() => showToast("Delegate Results Link copied!"));
+    }
+
+    function exportJSONBackup() {
+      if (!isWatcherFour(currentWatcher)) { alert("Watcher 4 — Vishnu administrator access required."); return; }
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "tqsmun2026_doomsday_backup.json";
+      a.click();
+    }
+
+    function importJSONBackup(event) {
+      if (!isWatcherFour(currentWatcher)) { alert("Watcher 4 — Vishnu administrator access required."); event.target.value = ""; return; }
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.delegates) {
+            state = parsed;
+            if (!state.passcode) state.passcode = "DOOMS123";
+            delete state.authAccounts;
+            saveState();
+            showToast("Backup restored successfully!");
+          }
+        } catch (err) { alert("Invalid backup format."); }
+      };
+      reader.readAsText(file);
+    }
+
+    function saveEBSettings() {
+      if (!isWatcherFour(currentWatcher)) { alert("Watcher 4 — Vishnu administrator access required."); return; }
+      document.querySelectorAll(".watcher-name-input").forEach((inp, idx) => {
+        if (inp.value.trim()) state.watchers[idx].name = inp.value.trim();
+      });
+      saveState(); showToast("Watcher profiles updated!");
+    }
+
+    function resetAllData() {
+      if (!isWatcherFour(currentWatcher)) { alert("Watcher 4 — Vishnu administrator access required."); return; }
+      if (!confirm("Reset all data to factory defaults?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      LEGACY_STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      saveState();
+      showToast("Terminal reset.");
+    }
+
+    /* Rendering */
+    function renderAll() {
+      const pill = document.getElementById("publishStatusPill");
+      if (state.published) {
+        pill.innerHTML = `<span class="dot green"></span><span>ARCHIVE STATUS: PUBLIC RELEASE ACTIVE</span>`;
+      } else {
+        pill.innerHTML = `<span class="dot red"></span><span>ARCHIVE STATUS: CLASSIFIED // EB AUDIT</span>`;
+      }
+
+      if (currentWatcher) {
+        document.getElementById("ebLoginBtn").classList.add("hidden");
+        document.getElementById("ebLogoutBtn").classList.remove("hidden");
+        document.getElementById("activeWatcherPill").classList.remove("hidden");
+        document.getElementById("activeWatcherLabel").textContent = currentWatcher.toUpperCase();
+        document.getElementById("delegateView").classList.add("hidden");
+        document.getElementById("ebView").classList.remove("hidden");
+        renderEBConsole();
+      } else {
+        document.getElementById("ebLoginBtn").classList.remove("hidden");
+        document.getElementById("ebLogoutBtn").classList.add("hidden");
+        document.getElementById("activeWatcherPill").classList.add("hidden");
+        document.getElementById("ebView").classList.add("hidden");
+        document.getElementById("delegateView").classList.remove("hidden");
+        renderDelegatePortal();
+      }
+    }
+
+    function renderEBConsole() {
+      const schemeTotal = getSchemeTotal();
+      const activeDay = state.activeDay || "day1";
+      const presentCount = state.delegates.filter(d => d[activeDay] === "P+" || d[activeDay] === "P").length;
+      const simpleMaj = presentCount > 0 ? Math.floor(presentCount / 2) + 1 : 0;
+      const twoThirdMaj = presentCount > 0 ? Math.ceil((presentCount * 2) / 3) : 0;
+
+      document.getElementById("statTotalDelegates").textContent = state.delegates.length;
+      document.getElementById("statPresentCount").textContent = `${presentCount} / ${state.delegates.length}`;
+      document.getElementById("statMajority").textContent = `${simpleMaj} / ${twoThirdMaj}`;
+      document.getElementById("statSchemeTotal").textContent = schemeTotal;
+      document.getElementById("schemeSumBadge").textContent = schemeTotal;
+      document.getElementById("awMaxTotal").textContent = schemeTotal;
+      document.getElementById("activeDaySelect").value = activeDay;
+
+      // Lock Status Badges
+      const d1Lock = document.getElementById("lockStatusDay1");
+      const d2Lock = document.getElementById("lockStatusDay2");
+      if (state.lockedDays.day1) d1Lock.classList.remove("hidden"); else d1Lock.classList.add("hidden");
+      if (state.lockedDays.day2) d2Lock.classList.remove("hidden"); else d2Lock.classList.add("hidden");
+
+      const pubBtn = document.getElementById("togglePublishBtn");
+      if (state.published) {
+        pubBtn.textContent = "Unpublish (Lock Results)";
+        pubBtn.className = "btn-danger";
+      } else {
+        pubBtn.textContent = "Publish Results to Delegates";
+        pubBtn.className = "btn-primary";
+      }
+
+      renderEBTable();
+      renderRollCallTable();
+      renderSchemeTable();
+      renderAwardsTable();
+      renderSettingsTab();
+    }
+
+    function renderEBTable() {
+      const query = (document.getElementById("ebSearchDelegate").value || "").toLowerCase();
+      const head = document.getElementById("ebMatrixHead");
+      const body = document.getElementById("ebMatrixBody");
+
+      head.innerHTML = `
+        <th>Portfolio / Delegate</th>
+        ${state.scheme.map(s => `<th>${s.title} (${s.max})</th>`).join("")}
+        <th>Total (${getSchemeTotal()})</th>
+        <th>Actions</th>
+      `;
+
+      const filtered = state.delegates.filter(d =>
+        d.portfolio.toLowerCase().includes(query) || (d.name && d.name.toLowerCase().includes(query))
+      );
+
+      body.innerHTML = filtered.map(del => {
+        const total = getDelegateTotal(del);
+        return `
+          <tr>
+            <td>
+              <strong>${del.portfolio}</strong>
+              ${del.name ? `<div style="font-size: 0.78rem; color: var(--text-secondary);">${del.name}</div>` : ""}
+              ${del.award ? `<div style="margin-top: 4px;"><span class="badge badge-award">${del.award}</span></div>` : ""}
+            </td>
+            ${state.scheme.map(sec => {
+              const sc = getDelegateSectionScore(del, sec);
+              const countTag = sec.mode === "average" && Array.isArray(del.scores[sec.id])
+                ? ` <span style="font-size:0.72rem; color:var(--text-muted);">(${del.scores[sec.id].length})</span>`
+                : "";
+              return `<td style="font-family: var(--font-mono);">${sc.toFixed(1)}${countTag}</td>`;
+            }).join("")}
+            <td style="font-family: var(--font-mono); font-weight: 900; color: var(--accent-amber);">${total.toFixed(2)}</td>
+            <td style="white-space: nowrap;">
+              <button class="btn-amber btn-sm" onclick="openGradeModal('${del.id}')">Grade / Remarks</button>
+              <button class="btn-danger btn-sm" onclick="deleteDelegate('${del.id}')">✕</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderRollCallTable() {
+      const body = document.getElementById("rollCallBody");
+      const getBadge = (status, locked) => {
+        const lockText = locked ? " [LOCKED]" : "";
+        if (status === "P+") return `<span class="badge badge-present">Present &amp; Voting${lockText}</span>`;
+        if (status === "P") return `<span class="badge badge-pv">Present${lockText}</span>`;
+        return `<span class="badge badge-absent">Absent${lockText}</span>`;
+      };
+
+      body.innerHTML = state.delegates.map((del, idx) => `
+        <tr>
+          <td style="font-family: var(--font-mono); color: var(--text-muted);">${idx + 1}</td>
+          <td><strong>${del.portfolio}</strong> ${del.name ? `<span style="color:var(--text-secondary);">(${del.name})</span>` : ""}</td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="cycleAttendance('${del.id}', 'day1')" ${state.lockedDays.day1 ? 'style="opacity: 0.7; cursor: not-allowed;"' : ''}>
+              ${getBadge(del.day1, state.lockedDays.day1)}
+            </button>
+          </td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="cycleAttendance('${del.id}', 'day2')" ${state.lockedDays.day2 ? 'style="opacity: 0.7; cursor: not-allowed;"' : ''}>
+              ${getBadge(del.day2, state.lockedDays.day2)}
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSchemeTable() {
+      const body = document.getElementById("schemeTableBody");
+      body.innerHTML = state.scheme.map(sec => `
+        <tr>
+          <td><input type="text" value="${sec.title}" onchange="updateSchemeSection('${sec.id}', 'title', this.value)" /></td>
+          <td>
+            <select onchange="updateSchemeSection('${sec.id}', 'mode', this.value)">
+              <option value="average" ${sec.mode === "average" ? "selected" : ""}>Multi-Entry Average</option>
+              <option value="direct" ${sec.mode === "direct" ? "selected" : ""}>Direct Single Score</option>
+            </select>
+          </td>
+          <td style="width: 120px;"><input type="number" min="1" step="0.5" value="${sec.max}" onchange="updateSchemeSection('${sec.id}', 'max', this.value)" /></td>
+          <td><button class="btn-danger btn-sm" onclick="deleteSchemeSection('${sec.id}')">Delete</button></td>
+        </tr>
+      `).join("");
+    }
+
+    function renderAwardsTable() {
+      const ranked = getRankedDelegates();
+      const body = document.getElementById("awardsTableBody");
+      const awardsList = ["", "Best Delegate", "High Commendation", "Special Mention", "Honourable Mention", "Best Position Paper"];
+
+      body.innerHTML = ranked.map(del => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 900; color: ${del.rank === 1 ? 'var(--accent-amber)' : '#fff'};">#${del.rank}</td>
+          <td><strong>${del.portfolio}</strong> ${del.name ? `<div style="font-size:0.78rem; color:var(--text-secondary);">${del.name}</div>` : ""}</td>
+          <td style="font-family: var(--font-mono); font-weight: 800;">${del.total.toFixed(2)}</td>
+          <td style="font-family: var(--font-mono); color: ${del.gap === 0 ? 'var(--accent-emerald)' : '#fda4af'};">${del.gap === 0 ? "LEADER (0.00)" : `-${del.gap.toFixed(2)}`}</td>
+          <td>
+            <select onchange="updateAwardInline('${del.id}', this.value)">
+              ${awardsList.map(aw => `<option value="${aw}" ${del.award === aw ? "selected" : ""}>${aw || "-- None --"}</option>`).join("")}
+            </select>
+          </td>
+          <td><button class="btn-outline btn-sm" onclick="openGradeModal('${del.id}')">Edit Remarks / Feedback</button></td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSettingsTab() {
+      const list = document.getElementById("watchersEditorList");
+      const admin = document.getElementById("credentialAdminPanel");
+      const backup = document.getElementById("backupAdminPanel");
+      const saveProfiles = document.getElementById("saveWatcherProfilesBtn");
+      const changePassword = document.getElementById("changeSharedPasswordBtn");
+      const hasAdmin = isWatcherFour(currentWatcher);
+
+      list.innerHTML = state.watchers.map(w => {
+        const name = escapeAuthText(w.name || "");
+        if (hasAdmin) {
+          return `<div style="display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;"><span style="font-family:var(--font-mono);font-size:.82rem;color:var(--accent-amber);">${escapeAuthText(w.role)}</span><input type="text" class="watcher-name-input" value="${name}" /></div>`;
+        }
+        return `<div class="credential-row"><div><strong>${escapeAuthText(w.role)}</strong><br><small>${name}</small></div><span class="badge">EB</span></div>`;
+      }).join("");
+
+      if (saveProfiles) saveProfiles.classList.toggle("hidden", !hasAdmin);
+      if (changePassword) changePassword.classList.toggle("hidden", !hasAdmin);
+      if (backup) backup.classList.toggle("hidden", !hasAdmin);
+
+      if (hasAdmin) {
+        admin.innerHTML = `<div class="panel-title" style="margin-bottom:8px">FULL ADMIN AUTHORITY ACTIVE</div><p class="auth-hint"><strong>WATCHER 4 — VISHNU</strong><br>Administrator controls are enabled for Watcher 4 only. You can manage Watcher names, rotate the single shared EB password, import/export backups and reset the terminal. The new shared password applies to all four Watchers.</p><div class="credential-row"><div><strong>Shared EB password</strong><br><small>One password used by Watcher 1–4</small></div><span class="badge">ACTIVE</span></div>`;
+      } else {
+        admin.innerHTML = `<div class="panel-title" style="margin-bottom:8px">WATCHER ACCESS / READ ONLY</div><p class="auth-hint">You are signed in as ${escapeAuthText(currentWatcher || "an EB operator")}. All four Watchers use the same shared EB password. Administrator settings, password rotation and backup controls are reserved for Watcher 4 — Vishnu.</p>`;
+      }
+    }
+
+    function renderDelegatePortal() {
+      const classified = document.getElementById("classifiedBanner");
+      const pubContent = document.getElementById("publishedContent");
+
+      const ranked = getRankedDelegates();
+
+      // Always populate delegate selector for secure attendance check
+      const selDel = document.getElementById("selectOwnPortfolioDelegate");
+      const prevDelVal = selDel.value;
+      selDel.innerHTML = `<option value="">-- Select Your Portfolio / Delegate Name --</option>` +
+        ranked.map(d => `<option value="${d.id}">${d.portfolio} ${d.name ? `(${d.name})` : ""}</option>`).join("");
+      if (prevDelVal) selDel.value = prevDelVal;
+      renderSelectedDossierDelegate();
+
+      if (!state.published) {
+        classified.classList.remove("hidden");
+        pubContent.classList.add("hidden");
+        return;
+      }
+
+      classified.classList.add("hidden");
+      pubContent.classList.remove("hidden");
+
+      const schemeTotal = getSchemeTotal();
+      document.getElementById("pubMaxTotal").textContent = schemeTotal;
+
+      const selPub = document.getElementById("selectOwnPortfolio");
+      const prevPubVal = selPub.value;
+      selPub.innerHTML = `<option value="">-- Select Your Portfolio / Delegate Name --</option>` +
+        ranked.map(d => `<option value="${d.id}">#${d.rank} — ${d.portfolio} ${d.name ? `(${d.name})` : ""}</option>`).join("");
+      if (prevPubVal) selPub.value = prevPubVal;
+
+      renderSelectedDossier();
+
+      const q = (document.getElementById("delegateSearchInput").value || "").toLowerCase();
+      const filtered = ranked.filter(d => d.portfolio.toLowerCase().includes(q) || (d.name && d.name.toLowerCase().includes(q)));
+
+      document.getElementById("publicLeaderboardBody").innerHTML = filtered.map(d => `
+        <tr>
+          <td style="font-family: var(--font-mono); font-weight: 900; color: ${d.rank === 1 ? 'var(--accent-amber)' : '#fff'};">#${d.rank}</td>
+          <td><strong>${d.portfolio}</strong> ${d.name ? `<div style="font-size: 0.78rem; color: var(--text-secondary);">${d.name}</div>` : ""}</td>
+          <td>${d.award ? `<span class="badge badge-award">${d.award}</span>` : `<span style="color:var(--text-muted);">—</span>`}</td>
+          <td style="font-family: var(--font-mono); font-weight: 800;">${d.total.toFixed(2)}</td>
+          <td style="font-family: var(--font-mono); color: ${d.gap === 0 ? 'var(--accent-emerald)' : '#fda4af'};">${d.gap === 0 ? "0.00 (TOP)" : `-${d.gap.toFixed(2)}`}</td>
+        </tr>
+      `).join("");
+    }
+
+    function renderSelectedDossierDelegate() {
+      const id = document.getElementById("selectOwnPortfolioDelegate").value;
+      const box = document.getElementById("selectedDossierContainerDelegate");
+      if (!id) {
+        box.innerHTML = "";
+        return;
+      }
+      const ranked = getRankedDelegates();
+      const d = ranked.find(item => item.id === id);
+      if (!d) return;
+
+      const d1Status = d.day1 === 'P+' ? 'Present & Voting' : (d.day1 === 'P' ? 'Present' : 'Absent');
+      const d2Status = d.day2 === 'P+' ? 'Present & Voting' : (d.day2 === 'P' ? 'Present' : 'Absent');
+
+      box.innerHTML = `
+        <div class="dossier-box" style="margin-top: 16px; text-align: left;">
+          <h4 style="color: var(--accent-amber); font-family: var(--font-mono); margin-bottom: 8px;">VERIFIED ATTENDANCE &amp; VOTING RECORD</h4>
+          <div style="font-size: 0.9rem; margin-bottom: 6px;"><strong>Day 1 (Nov 28):</strong> <span class="badge ${d.day1 === 'A' ? 'badge-absent' : 'badge-present'}">${d1Status}</span> ${state.lockedDays.day1 ? '🔒 [Locked]' : ''}</div>
+          <div style="font-size: 0.9rem; margin-bottom: 10px;"><strong>Day 2 (Nov 29):</strong> <span class="badge ${d.day2 === 'A' ? 'badge-absent' : 'badge-present'}">${d2Status}</span> ${state.lockedDays.day2 ? '🔒 [Locked]' : ''}</div>
+          <p style="font-size: 0.8rem; color: var(--text-secondary);">Attendance is verified and sealed by Executive Board 2-step protocol.</p>
+        </div>
+      `;
+    }
+
+    function renderSelectedDossier() {
+      const id = document.getElementById("selectOwnPortfolio").value;
+      const box = document.getElementById("selectedDossierContainer");
+      if (!id) { box.innerHTML = ""; return; }
+
+      const ranked = getRankedDelegates();
+      const d = ranked.find(item => item.id === id);
+      if (!d) return;
+
+      const d1Status = d.day1 === 'P+' ? 'Present & Voting' : (d.day1 === 'P' ? 'Present' : 'Absent');
+      const d2Status = d.day2 === 'P+' ? 'Present & Voting' : (d.day2 === 'P' ? 'Present' : 'Absent');
+
+      const breakdownHtml = state.scheme.map(sec => {
+        const sc = getDelegateSectionScore(d, sec);
+        let detail = "";
+        if (sec.mode === "average" && Array.isArray(d.scores[sec.id]) && d.scores[sec.id].length > 0) {
+          detail = ` (Entries: ${d.scores[sec.id].join(", ")})`;
+        }
+        return `
+          <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(34,39,52,0.5); font-size: 0.85rem;">
+            <span>${sec.title}<span style="color:var(--text-muted); font-size:0.78rem;">${detail}</span></span>
+            <strong style="font-family: var(--font-mono); color: var(--accent-amber);">${sc.toFixed(2)} / ${sec.max}</strong>
+          </div>
+        `;
+      }).join("");
+
+      box.innerHTML = `
+        <div class="dossier-box">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+            <div>
+              <div style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent-amber);">RANK #${d.rank} OF ${ranked.length} // GAP FROM #1: ${d.gap === 0 ? "0.00 (LEADER)" : `-${d.gap.toFixed(2)} PTS`}</div>
+              <h3 style="font-size: 1.25rem; margin-top: 2px;">${d.portfolio} ${d.name ? `<span style="font-weight:400; color:var(--text-secondary);">— ${d.name}</span>` : ""}</h3>
+            </div>
+            <div style="text-align: right;">
+              ${d.award ? `<div style="margin-bottom: 4px;"><span class="badge badge-award">${d.award}</span></div>` : ""}
+              <div style="font-family: var(--font-mono); font-size: 1.2rem; font-weight: 900;">TOTAL: ${d.total.toFixed(2)} / ${getSchemeTotal()}</div>
+            </div>
+          </div>
+
+          <div style="background: var(--bg-input); padding: 12px; border-radius: 6px; border: 1px solid var(--border-hazard); margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-amber); margin-bottom: 6px;">SECURE ATTENDANCE &amp; VOTING LOG</div>
+            <div style="font-size: 0.85rem;"><strong>Day 1:</strong> <span class="badge ${d.day1 === 'A' ? 'badge-absent' : 'badge-present'}">${d1Status}</span> ${state.lockedDays.day1 ? '🔒 [Locked]' : ''}</div>
+            <div style="font-size: 0.85rem; margin-top: 4px;"><strong>Day 2:</strong> <span class="badge ${d.day2 === 'A' ? 'badge-absent' : 'badge-present'}">${d2Status}</span> ${state.lockedDays.day2 ? '🔒 [Locked]' : ''}</div>
+          </div>
+
+          <div style="margin-bottom: 14px;">
+            <div style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 6px;">SECTION SCORE BREAKDOWN</div>
+            ${breakdownHtml}
+          </div>
+
+          <div class="feedback-grid">
+            <div class="feedback-block">
+              <h4>Executive Board Remarks</h4>
+              <p style="font-size: 0.88rem; color: var(--text-primary);">${d.remarks || "No specific remarks recorded."}</p>
+            </div>
+            <div class="feedback-block">
+              <h4>Places Where You Can Improve</h4>
+              <p style="font-size: 0.88rem; color: var(--text-primary);">${d.improve || "No specific improvement notes recorded."}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+
+    // Explicit, single-path event wiring for the EB login interface.
+    const watcherCardsHost = document.getElementById("watcherLoginCards");
+    if (watcherCardsHost) watcherCardsHost.onclick = event => {
+      const card = event.target.closest(".watcher-auth-card");
+      if (!card) return;
+      watcherCardsHost.querySelectorAll(".watcher-auth-card").forEach(item => item.setAttribute("aria-pressed", item === card ? "true" : "false"));
+      selectWatcherLogin(card.dataset.value);
+    };
+    document.querySelectorAll(".password-toggle").forEach(button => {
+      button.onclick = () => toggleAuthPassword(button.dataset.target, button);
+    });
+    const restoreDefaultButton = document.getElementById("restoreDefaultPasswordBtn");
+    if (restoreDefaultButton) restoreDefaultButton.onclick = restoreDefaultEBPassword;
+    const loginModalBackdrop = document.getElementById("loginModal");
+    if (loginModalBackdrop) loginModalBackdrop.onclick = event => {
+      if (event.target === loginModalBackdrop) closeLoginModal();
+    };
+
+
+    renderAll();
+  </script>
+
+  <script>
+    // Accessibility and navigation helpers. These do not alter application state or scoring logic.
+    (() => {
+      const topButton = document.getElementById('backToTop');
+      const updateTopButton = () => {
+        if (topButton) topButton.classList.toggle('visible', window.scrollY > 420);
+      };
+      window.addEventListener('scroll', updateTopButton, { passive: true });
+      updateTopButton();
+      topButton?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+      const isTyping = (target) => target && (target.matches('input, textarea, select') || target.isContentEditable);
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          const openModal = document.querySelector('.modal-backdrop.open');
+          if (openModal) {
+            const closeButton = openModal.querySelector('.panel-header button, .auth-close');
+            closeButton?.click();
+          }
+          return;
+        }
+        if (event.altKey || event.ctrlKey || event.metaKey || isTyping(event.target)) return;
+        if (event.key === '/' ) {
+          const ebVisible = !document.getElementById('ebView')?.classList.contains('hidden');
+          const search = document.getElementById(ebVisible ? 'ebSearchDelegate' : 'delegateSearchInput');
+          if (search && !search.disabled) {
+            event.preventDefault();
+            search.focus();
+          }
+          return;
+        }
+        const ebVisible = !document.getElementById('ebView')?.classList.contains('hidden');
+        if (ebVisible && /^[1-5]$/.test(event.key)) {
+          const tabs = [...document.querySelectorAll('.nav-tab[data-tab]')];
+          const tab = tabs[Number(event.key) - 1];
+          if (tab) tab.click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
