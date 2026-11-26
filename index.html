@@ -78,7 +78,7 @@
               <form id="delegateForm" class="form-grid"><div class="field wide"><label for="newDelegateName">Delegate name</label><input class="input" id="newDelegateName" required></div><div class="field wide"><label for="newDelegateEmail">Email address</label><input class="input" id="newDelegateEmail" type="email" required></div><div class="field wide"><label for="newDelegatePhone">Phone number (include country code only if applicable)</label><input class="input" id="newDelegatePhone" inputmode="tel" required></div><div class="field wide"><label for="newDelegateCharacter">Available character</label><select id="newDelegateCharacter" required></select></div><div class="field wide"><button class="btn btn-primary" type="submit">Save delegate allocation</button></div></form>
               <div class="divider"></div><div class="card-title">Upload a private dossier</div><form id="dossierForm" class="form-grid" style="margin-top:10px"><div class="field wide"><label for="dossierDelegateSelect">Delegate</label><select id="dossierDelegateSelect" required></select></div><div class="field wide"><label for="dossierFile">Dossier file (PDF, DOCX, image or text · max 25 MB)</label><input class="input" id="dossierFile" type="file" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.webp,.txt" required></div><div class="field wide"><button class="btn btn-outline" type="submit">Upload dossier to portfolio</button></div></form>
             </div>
-            <div class="card c7"><div class="card-head"><div><div class="card-title">Delegate register</div><div class="card-sub">Phone numbers are visible to EB only.</div></div><button class="btn btn-outline btn-sm" id="refreshDelegates">Refresh</button></div><div id="delegateRegister" class="stack"><div class="empty">Loading delegates…</div></div></div>
+            <div class="card c7"><div class="card-head"><div><div class="card-title">Delegate register</div><div class="card-sub">Phone numbers are visible to EB only. 4 EB quorum votes required to remove a delegate.</div></div><button class="btn btn-outline btn-sm" id="refreshDelegates">Refresh</button></div><div id="delegateRegister" class="stack"><div class="empty">Loading delegates…</div></div></div>
             <div class="card c12"><div class="card-head"><div><div class="card-title">Dossier register</div><div class="card-sub">Files assigned to delegate portfolios.</div></div><button class="btn btn-outline btn-sm" id="refreshDossiers">Refresh</button></div><div id="dossierRegister" class="stack"><div class="empty">No dossiers loaded.</div></div></div>
           </div>
         </section>
@@ -119,7 +119,7 @@
         <section class="page" id="eb-account"><div class="page-head"><div><h2>Account settings</h2><p>Change your own Watcher password. Watcher 4 controls roll-call unlocking.</p></div><span class="tag" id="accountRole">Watcher</span></div><div class="card" style="max-width:600px"><div class="card-title">Change password</div><div class="card-sub" style="margin-bottom:12px">After changing it, use the new password next time you sign in.</div><form id="passwordForm" class="form-grid"><div class="field wide"><label for="newPassword">New password (minimum 10 characters)</label><input class="input" id="newPassword" type="password" minlength="10" required></div><div class="field wide"><label for="confirmPassword">Confirm new password</label><input class="input" id="confirmPassword" type="password" minlength="10" required></div><div class="field wide"><button class="btn btn-primary" type="submit">Update my password</button></div></form><div class="notice warn" style="margin-top:14px">The temporary initial password requested for Watcher accounts is DOOMS123. Change it after first sign-in; a stronger password is recommended.</div></div>
           <div class="factory-reset-box hidden" id="factoryResetCard" style="max-width:760px;margin-top:16px">
             <div class="split"><div><div class="card-title" style="color:#ff9ab8">Factory Reset</div><div class="card-sub">Watcher 4 only · Two-step verification required</div></div><span class="tag pink">Destructive action</span></div>
-            <p class="muted">Clears committee activity, puzzles and submissions, directives, objectives, inventory allocations, resource balances, attendance and results. Preserves delegate allocations, character assignments, uploaded dossiers and all Watcher accounts.</p>
+            <p class="muted">Clears committee activity, puzzles and submissions, directives, objectives, inventory allocations, resource balances, attendance, results, dossiers and all delegate profiles. Preserves Watcher accounts.</p>
             <button class="btn btn-danger" id="factoryResetStart" type="button">Start Factory Reset</button>
             <div class="factory-reset-step hidden" id="factoryResetStepTwo">
               <div class="smallcaps" style="color:#ff9ab8">Step 2 of 2 · Final confirmation</div>
@@ -178,7 +178,6 @@ const setVisible = (id, yes) => $(id)?.classList.toggle('hidden', !yes);
 function notify(message, kind='success') { const t=$('toast');t.textContent=message;t.className='toast show '+kind;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast',4800); }
 function setLoginStatus(message,kind='warn'){const e=$('loginStatus');e.textContent=message;e.className='notice '+kind;}
 function selectedValues(id){return [...($(id)?.selectedOptions||[])].map(o=>o.value).filter(Boolean);}
-function initials(s){return String(s||'MD').split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase();}
 function dateText(v){return v?new Date(v).toLocaleString():'';}
 function fileSafe(s){return String(s||'file').normalize('NFKD').replace(/[^a-zA-Z0-9._-]+/g,'_').slice(0,100)||'file';}
 function empty(message){return `<div class="empty">${esc(message)}</div>`;}
@@ -207,9 +206,6 @@ async function routeUser(user){
     await loadEBOverview();
     return;
   }
-  // Resolve the authenticated anonymous session to exactly one delegate first.
-  // Never query the full delegate table with maybeSingle(): that can return
-  // multiple rows when row-level filtering is absent or misconfigured.
   const {data:delegateId,error:delegateIdError}=await db.rpc('portal_current_delegate_id');
   if(delegateIdError)throw delegateIdError;
   if(!delegateId){showScreen('unassignedScreen');setUserPill('');return;}
@@ -251,10 +247,36 @@ async function refreshDelegates(){
   const opts=delegates.map(d=>`<option value="${esc(d.id)}">${esc(d.delegate_name)} · ${esc(d.character_code)}</option>`).join('');
   ['dossierDelegateSelect','puzzleRecipients','itemDelegate','resultDelegate','resourceDelegate','objectiveDelegate'].forEach(id=>{if($(id))$(id).innerHTML=opts;});
   $('dirParticipants').innerHTML=delegates.map(d=>`<option value="${esc(d.id)}">${esc(d.delegate_name)} · ${esc(d.character_code)}</option>`).filter(s=>!s.includes(`value="${delegateProfile?.id}"`)).join('');
-  $('delegateRegister').innerHTML=delegates.length?delegates.map(d=>`<div class="record"><div class="split"><div><h4>${esc(d.delegate_name)} · ${esc(d.character_code)}</h4><p>${esc(d.delegate_email)} · ${esc(d.phone_number)}</p><p>${esc(d.faction)}</p></div><span class="tag ${d.is_active?'green':'pink'}">${d.is_active?'Active':'Inactive'}</span></div></div>`).join(''):empty('No delegate profiles registered.');
+  
+  // Load delegate register with individual remove button requiring 4 EB approvals
+  const {data:approvalData,error:approvalError}=await db.from('portal_delegate_removal_approvals').select('target_delegate_id');
+  if(approvalError)throw approvalError;
+  const approvalCounts={};
+  (approvalData||[]).forEach(row=>{ approvalCounts[row.target_delegate_id]=(approvalCounts[row.target_delegate_id]||0)+1; });
+
+  $('delegateRegister').innerHTML=delegates.length?delegates.map(d=>{
+    const votes=approvalCounts[d.id]||0;
+    return `<div class="record"><div class="split"><div><h4>${esc(d.delegate_name)} · ${esc(d.character_code)}</h4><p>${esc(d.delegate_email)} · ${esc(d.phone_number)}</p><p>${esc(d.faction)}</p></div><div style="display:flex;gap:6px;align-items:center;"><span class="tag ${d.is_active?'green':'pink'}">${d.is_active?'Active':'Inactive'}</span></div></div><div class="record-actions" style="margin-top:8px"><span class="tag amber">Removal votes: ${votes}/4</span><button class="btn btn-danger btn-sm" data-remove-delegate="${d.id}">Vote to remove delegate</button></div></div>`;
+  }).join(''):empty('No delegate profiles registered.');
+
+  $('delegateRegister').querySelectorAll('[data-remove-delegate]').forEach(b=>b.onclick=()=>removeDelegate(b.dataset.removeDelegate));
   $('vacancySummary').textContent=`${available.length} open vacancy/vacancies: ${available.map(c=>c.character_name).join(', ')||'none'}. Victor von Doom remains reserved for Swayam and is excluded for now.`;
   await loadDossiers();
 }
+
+async function removeDelegate(delegateId){
+  if(!confirm('Cast your EB vote to remove this delegate? Removal requires approval from 4 distinct Executive Board members.'))return;
+  try{
+    const {data,error}=await db.rpc('portal_delete_delegate',{p_delegate_id:delegateId});
+    if(error)throw error;
+    notify(data?.message||'Removal vote recorded.');
+    await refreshDelegates();
+    await loadEBOverview();
+  }catch(e){
+    notify('Could not remove delegate: '+errText(e),'error');
+  }
+}
+
 async function addDelegate(ev){ev.preventDefault();try{const row={delegate_email:cleanEmail(value('newDelegateEmail')),delegate_name:value('newDelegateName'),phone_number:value('newDelegatePhone'),character_code:value('newDelegateCharacter'),is_active:true};const {error}=await db.from('portal_delegate_profiles').insert(row);if(error)throw error;$('delegateForm').reset();await refreshDelegates();await loadEBOverview();notify('Delegate portfolio created. The first four phone digits are now their access code.');}catch(e){notify('Could not add delegate: '+errText(e),'error');}}
 async function uploadDossier(ev){ev.preventDefault();try{const id=value('dossierDelegateSelect'),file=$('dossierFile').files[0];if(!id||!file)throw new Error('Choose a delegate and a file.');if(file.size>25*1024*1024)throw new Error('The upload limit is 25 MB.');const path=`${id}/${Date.now()}_${fileSafe(file.name)}`;const {error:upError}=await db.storage.from(BUCKET).upload(path,file,{upsert:false,contentType:file.type||undefined});if(upError)throw upError;const {error}=await db.from('portal_dossiers').insert({delegate_id:id,file_name:file.name,storage_path:path,mime_type:file.type||null,uploaded_by:activeUser.id});if(error){await db.storage.from(BUCKET).remove([path]);throw error;}$('dossierForm').reset();await loadDossiers();notify('Private dossier uploaded to the selected delegate portfolio.');}catch(e){notify('Dossier upload failed: '+errText(e),'error');}}
 async function loadDossiers(){if(!watcher)return;const {data,error}=await db.from('portal_dossiers').select('id,delegate_id,file_name,storage_path,mime_type,created_at').order('created_at',{ascending:false});if(error)throw error;const rows=data||[];$('dossierRegister').innerHTML=rows.length?rows.map(d=>{const p=delegates.find(x=>x.id===d.delegate_id);return `<div class="record"><div class="split"><h4>${esc(d.file_name)}</h4><span class="tag">${esc(p?.delegate_name||'Delegate')}</span></div><p>${esc(p?.character_code||'')} · Uploaded ${esc(dateText(d.created_at))}</p><div class="record-actions"><button class="btn btn-outline btn-sm" data-open-dossier="${d.id}">Open file</button><button class="btn btn-danger btn-sm" data-delete-dossier="${d.id}" data-path="${esc(d.storage_path)}">Remove</button></div></div>`;}).join(''):empty('No dossiers uploaded yet.');$('dossierRegister').querySelectorAll('[data-open-dossier]').forEach(b=>b.onclick=()=>openDossier(b.dataset.openDossier));$('dossierRegister').querySelectorAll('[data-delete-dossier]').forEach(b=>b.onclick=()=>deleteDossier(b.dataset.deleteDossier,b.dataset.path));}
@@ -372,7 +394,7 @@ function wire(){
   $('resourceAudience').onchange=toggleResourceAudience;$('resourceForm').onsubmit=saveResource;$('refreshResources').onclick=()=>loadResources().catch(e=>notify(errText(e),'error'));$('passwordForm').onsubmit=ev=>changePassword(ev).catch(e=>notify(errText(e),'error'));$('refreshOverview').onclick=()=>loadEBOverview().catch(e=>notify(errText(e),'error'));
   $('delegateDirectiveForm').onsubmit=submitDirective;
   $('factoryResetStart').onclick=()=>{try{startFactoryReset();}catch(e){notify(errText(e),'error');}};
-  $('factoryResetCancel').onclick=cancelFactoryReset;
+  $('factoryResetCancel').cancelFactoryReset;
   $('factoryResetPhrase').oninput=()=>{$('factoryResetConfirm').disabled=value('factoryResetPhrase')!=='RESET MARVEL DOOMSDAY';};
   $('factoryResetConfirm').onclick=()=>executeFactoryReset().catch(e=>notify(errText(e),'error'));
 }
