@@ -536,51 +536,87 @@ async function uploadDossier(ev){ev.preventDefault();try{const id=value('dossier
 async function loadDossiers(){if(!watcher)return;const {data,error}=await db.from('portal_dossiers').select('id,delegate_id,file_name,storage_path,mime_type,created_at').order('created_at',{ascending:false});if(error)throw error;const rows=data||[];$('dossierRegister').innerHTML=rows.length?rows.map(d=>{const p=delegates.find(x=>x.id===d.delegate_id);return `<div class="record"><div class="split"><h4>${esc(d.file_name)}</h4><span class="tag">${esc(p?.delegate_name||'Delegate')}</span></div><p>${esc(p?.character_code||'')} · Uploaded ${esc(dateText(d.created_at))}</p><div class="record-actions"><button class="btn btn-outline btn-sm" data-open-dossier="${d.id}">Open file</button><button class="btn btn-danger btn-sm" data-revoke-dossier="${d.id}">Remove dossier</button></div></div>`;}).join(''):empty('No dossiers uploaded yet.');$('dossierRegister').querySelectorAll('[data-open-dossier]').forEach(b=>b.onclick=()=>openDossier(b.dataset.openDossier));$('dossierRegister').querySelectorAll('[data-revoke-dossier]').forEach(b=>b.onclick=async()=>{await revokePortalRecord('dossier',b.dataset.revokeDossier,'dossier');await loadDossiers();});}
 async function openDossier(id){const {data,error}=await db.from('portal_dossiers').select('storage_path').eq('id',id).single();if(error)throw error;const {data:signed,error:signError}=await db.storage.from(BUCKET).createSignedUrl(data.storage_path,300);if(signError)throw signError;window.open(signed.signedUrl,'_blank','noopener,noreferrer');}
 async function deleteDossier(id,path){if(!confirm('Remove this dossier from the delegate portfolio?'))return;const {error:dbError}=await db.from('portal_dossiers').delete().eq('id',id);if(dbError)throw dbError;const {error}=await db.storage.from(BUCKET).remove([path]);if(error)notify('Dossier record removed; storage cleanup warning: '+errText(error),'error');else notify('Dossier removed.');await loadDossiers();}
-
 async function loadRollcall(){
-  const day=Number(value('rollcallDay')||1);const [{data:s,error:se},{data:rows,error:re}]=await Promise.all([db.from('portal_rollcall_sessions').select('*').eq('committee_day',day).single(),db.from('portal_rollcall').select('*').eq('committee_day',day)]);if(se)throw se;if(re)throw re;
-  currentRollcallLocked=!!s.is_locked;$('rollcallLockState').textContent=s.is_locked?'LOCKED':'OPEN';$('rollcallLockState').className='tag '+(s.is_locked?'pink':'green');$('rollcallNotice').textContent=s.is_locked?`Day ${day} is locked. Only Watcher 4 can unlock it.`:`Day ${day} is open. Mark every delegate, save, then lock the roll-call when final.`;
-  setVisible('unlockRollcall',!!watcher?.is_super_admin&&s.is_locked);$('lockRollcall').disabled=s.is_locked;$('saveRollcall').disabled=s.is_locked;
-  const map=new Map((rows||[]).map(r=>[r.delegate_id,r]));
-  $('rollcallList').innerHTML=delegates.map(d=>{const row=map.get(d.id);return `<div class="record roll-row" data-roll-id="${d.id}"><div class="split"><div><h4>${esc(d.delegate_name)} · ${esc(d.character_code)}</h4><p>${esc(d.faction)}</p></div><div style="min-width:150px"><select class="input roll-status" data-id="${d.id}" ${s.is_locked?'disabled':''}><option value="">Not marked</option><option value="present" ${row?.attendance_status==='present'?'selected':''}>Present</option><option value="late" ${row?.attendance_status==='late'?'selected':''}>Late</option><option value="absent" ${row?.attendance_status==='absent'?'selected':''}>Absent</option><option value="excused" ${row?.attendance_status==='excused'?'selected':''}>Excused</option></select></div></div><input class="input roll-note" data-id="${d.id}" placeholder="Note (optional)" value="${esc(row?.note||'')}" ${s.is_locked?'disabled':''} style="margin-top:7px"></div>`;}).join('');
-}
-async function saveRollcall(){if(currentRollcallLocked)throw new Error('This roll-call is locked.');const day=Number(value('rollcallDay'));const rows=[];document.querySelectorAll('.roll-status').forEach(sel=>{if(sel.value){const note=document.querySelector(`.roll-note[data-id="${sel.dataset.id}"]`)?.value||'';rows.push({committee_day:day,delegate_id:sel.dataset.id,attendance_status:sel.value,note,marked_by:activeUser.id,marked_at:new Date().toISOString()});}});if(!rows.length)throw new Error('Mark at least one delegate before saving.');const {error}=await db.from('portal_rollcall').upsert(rows,{onConflict:'committee_day,delegate_id'});if(error)throw error;notify('Roll-call saved.');await loadRollcall();}
-async function lockRollcall(){const unmarked=[...document.querySelectorAll('.roll-status')].filter(s=>!s.value).length;if(unmarked){throw new Error(`Mark all active delegates before locking. ${unmarked} still unmarked.`);}if(!confirm(`Lock Day ${value('rollcallDay')} roll-call? Standard EB members will not be able to edit it afterwards.`))return;const {error}=await db.rpc('portal_lock_rollcall',{p_day:Number(value('rollcallDay'))});if(error)throw error;notify('Roll-call locked.');await loadRollcall();}
-async function unlockRollcall(){if(!watcher?.is_super_admin)throw new Error('Only Watcher 4 can unlock roll-call.');if(!confirm(`Unlock Day ${value('rollcallDay')} roll-call?`))return;const {error}=await db.rpc('portal_unlock_rollcall',{p_day:Number(value('rollcallDay'))});if(error)throw error;notify('Roll-call unlocked by Watcher 4.');await loadRollcall();}
+  const day = Number(value('rollcallDay') || 1);
 
-async function openPuzzleMedia(mediaId){
- const {data,error}=await db.from('portal_puzzle_media').select('storage_path,file_name').eq('id',mediaId).single();if(error)throw error;
- const {data:signed,error:se}=await db.storage.from('portal-puzzle-media').createSignedUrl(data.storage_path,300);if(se)throw se;
- window.open(signed.signedUrl,'_blank','noopener,noreferrer');
-}
-async function createPuzzle(ev){
- ev.preventDefault();let puzzleId=null,published=false;const uploadedPaths=[];
- try{
-  const audience=value('puzzleAudience'),recipientIds=selectedValues('puzzleRecipients'),files=[...($('puzzleFiles')?.files||[])];
-  if(audience==='selected'&&!recipientIds.length)throw new Error('Select at least one delegate.');
-  for(const f of files){if(f.size>50*1024*1024)throw new Error(`${f.name} exceeds the 50 MB per-file limit.`);}
-  const answer=value('puzzleAnswer'),auto=$('puzzleAutoMark').checked;if(auto&&!answer)throw new Error('Add an answer key when automatic checking is enabled.');
-  const mode=value('puzzleResourceMode')||'none',tech=Number(value('puzzleResourceTechnology')||0),ops=Number(value('puzzleResourceOperational')||0),inf=Number(value('puzzleResourceInfluence')||0);
-  if(mode!=='none'&&(tech+ops+inf<=0))throw new Error('Set at least one resource cost, or choose No resources needed.');
-  const row={title:value('puzzleTitle').trim(),category:value('puzzleCategory'),difficulty:Number(value('puzzleDifficulty')),prompt:value('puzzlePrompt').trim(),hint:value('puzzleHint')||null,audience,target_faction:audience==='faction'?value('puzzleFaction'):null,deadline:value('puzzleDeadline')?new Date(value('puzzleDeadline')).toISOString():null,attempt_limit:value('puzzleAttempts')?Number(value('puzzleAttempts')):null,auto_mark:auto,correct_marks:Number(value('puzzleAutoMarks')||0),resource_use_mode:mode,resource_cost_technology:mode==='none'?0:tech,resource_cost_operational:mode==='none'?0:ops,resource_cost_influence:mode==='none'?0:inf,status:'draft',created_by:activeUser.id};
-  const {data:puzzle,error}=await db.from('portal_puzzles').insert(row).select('id').single();if(error)throw error;puzzleId=puzzle.id;
-  if(audience==='selected'){const {error:e}=await db.from('portal_puzzle_access').insert(recipientIds.map(delegate_id=>({puzzle_id:puzzleId,delegate_id})));if(e)throw e;}
-  if(answer){const accepted=value('puzzleAccepted').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const {error:k}=await db.from('portal_puzzle_keys').insert({puzzle_id:puzzleId,answer_key:answer,accepted_answers:accepted});if(k)throw k;}
-  for(let index=0;index<files.length;index++){
-   const file=files[index],safe=fileSafe(file.name),path=`${puzzleId}/${Date.now()}_${index}_${safe}`;
-   const {error:upError}=await db.storage.from('portal-puzzle-media').upload(path,file,{upsert:false,contentType:file.type||undefined});if(upError)throw upError;uploadedPaths.push(path);
-   const {error:metaError}=await db.from('portal_puzzle_media').insert({puzzle_id:puzzleId,file_name:file.name,storage_path:path,mime_type:file.type||null,file_size:file.size,uploaded_by:activeUser.id});if(metaError)throw metaError;
+  let { data: s, error: se } = await db
+    .from('portal_rollcall_sessions')
+    .select('*')
+    .eq('committee_day', day)
+    .maybeSingle();
+
+  if (se) throw se;
+
+  // Create an OPEN session if this committee day has none.
+  if (!s) {
+    const { data: created, error: createError } = await db
+      .from('portal_rollcall_sessions')
+      .insert({
+        committee_day: day,
+        is_locked: false
+      })
+      .select('*')
+      .single();
+
+    if (createError) throw createError;
+    s = created;
   }
-  const {error:publishError}=await db.from('portal_puzzles').update({status:'published',published_at:new Date().toISOString()}).eq('id',puzzleId);if(publishError)throw publishError;published=true;
-  $('puzzleForm').reset();$('puzzleAutoMarks').value='0';$('puzzleAutoMark').checked=false;$('puzzleResourceMode').value='none';$('puzzleResourceTechnology').value='0';$('puzzleResourceOperational').value='0';$('puzzleResourceInfluence').value='0';setVisible('puzzleResourceCostsWrap',false);
-  notify(`Puzzle published${files.length?` with ${files.length} private reference attachment(s)`:''}.`);await Promise.all([loadPuzzles(),loadEBOverview()]);
- }catch(e){
-  if(!published){
-   if(uploadedPaths.length){const {error:cleanupError}=await db.storage.from('portal-puzzle-media').remove(uploadedPaths);if(cleanupError)console.error('Puzzle media cleanup warning:',cleanupError);}
-   if(puzzleId){const {error:deleteError}=await db.from('portal_puzzles').delete().eq('id',puzzleId);if(deleteError)console.error('Draft puzzle cleanup warning:',deleteError);}
-   notify('Puzzle could not be published: '+errText(e),'error');
-  }else{notify('Puzzle was published, but the follow-up refresh failed: '+errText(e),'error');}
- }
+
+  const { data: rows, error: re } = await db
+    .from('portal_rollcall')
+    .select('*')
+    .eq('committee_day', day);
+
+  if (re) throw re;
+
+  currentRollcallLocked = !!s.is_locked;
+
+  $('rollcallLockState').textContent =
+    s.is_locked ? 'LOCKED' : 'OPEN';
+
+  $('rollcallLockState').className =
+    'tag ' + (s.is_locked ? 'pink' : 'green');
+
+  $('rollcallNotice').textContent = s.is_locked
+    ? `Day ${day} is locked. Only Watcher 4 can unlock it.`
+    : `Day ${day} is open. Mark every delegate, save, then lock the roll-call when final.`;
+
+  setVisible(
+    'unlockRollcall',
+    !!watcher?.is_super_admin && s.is_locked
+  );
+
+  $('lockRollcall').disabled = s.is_locked;
+  $('saveRollcall').disabled = s.is_locked;
+
+  const map = new Map((rows || []).map(r => [r.delegate_id, r]));
+
+  $('rollcallList').innerHTML = delegates.map(d => {
+    const row = map.get(d.id);
+
+    return `<div class="record roll-row" data-roll-id="${d.id}">
+      <div class="split">
+        <div>
+          <h4>${esc(d.delegate_name)} · ${esc(d.character_code)}</h4>
+          <p>${esc(d.faction)}</p>
+        </div>
+        <div style="min-width:150px">
+          <select class="input roll-status" data-id="${d.id}" ${s.is_locked?'disabled':''}>
+            <option value="">Not marked</option>
+            <option value="present" ${row?.attendance_status==='present'?'selected':''}>Present</option>
+            <option value="late" ${row?.attendance_status==='late'?'selected':''}>Late</option>
+            <option value="absent" ${row?.attendance_status==='absent'?'selected':''}>Absent</option>
+            <option value="excused" ${row?.attendance_status==='excused'?'selected':''}>Excused</option>
+          </select>
+        </div>
+      </div>
+      <input class="input roll-note" data-id="${d.id}"
+        placeholder="Note (optional)"
+        value="${esc(row?.note||'')}"
+        ${s.is_locked?'disabled':''}
+        style="margin-top:7px">
+    </div>`;
+  }).join('');
 }
 async function loadPuzzles(){
  const [{data:puzzles,error:pe},{data:subs,error:se},{data:notes,error:ne},{data:media,error:me},revoked]=await Promise.all([
